@@ -1,0 +1,33 @@
+--- CMakeLists.txt.orig	2022-12-23 20:14:03.000000000 +0800
++++ CMakeLists.txt	2022-12-23 20:14:14.000000000 +0800
+@@ -289,7 +289,7 @@
+     set(JARS_DEST_DIR "${Launcher_Name}.app/Contents/MacOS/jars")
+ 
+     # Apps to bundle
+-    set(APPS "\${CMAKE_INSTALL_PREFIX}/${Launcher_Name}.app")
++    set(APPS "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${Launcher_Name}.app")
+ 
+     # Mac bundle settings
+     set(MACOSX_BUNDLE_BUNDLE_NAME "${Launcher_DisplayName}")
+--- launcher/CMakeLists.txt.orig	2022-12-23 20:14:03.000000000 +0800
++++ launcher/CMakeLists.txt	2022-12-23 20:14:14.000000000 +0800
+@@ -1083,7 +1083,7 @@
+ if(INSTALL_BUNDLE STREQUAL "full")
+     # Add qt.conf - this makes Qt stop looking for things outside the bundle
+     install(
+-        CODE "file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${RESOURCES_DEST_DIR}/qt.conf\" \" \")"
++        CODE "file(WRITE \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${RESOURCES_DEST_DIR}/qt.conf\" \" \")"
+         COMPONENT Runtime
+     )
+     # Bundle plugins
+@@ -1181,10 +1181,4 @@
+             PATTERN "*qcertonlybackend*" EXCLUDE
+         )
+     endif()
+-    configure_file(
+-        "${CMAKE_CURRENT_SOURCE_DIR}/install_prereqs.cmake.in"
+-        "${CMAKE_CURRENT_BINARY_DIR}/install_prereqs.cmake"
+-        @ONLY
+-    )
+-    install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/install_prereqs.cmake" COMPONENT Runtime)
+ endif()

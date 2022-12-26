@@ -10,15 +10,14 @@ legacysupport.newest_darwin_requires_legacy 10
 
 # Remember to update libvirt and py-libvirt at the same time.
 name                libvirt
-version             7.10.0
+version             8.10.0
 revision            0
-checksums           rmd160  015d80331e44508dbe7c2f3cafaa140d65a892e8 \
-                    sha256  cb318014af097327928c6e3d72922e3be02a3e6401247b2aa52d9ab8e0b480f9 \
-                    size    8798000
+checksums           rmd160  78f45aae0ae2f1fc1abee64cbfa918072a02afe5 \
+                    sha256  bb07b7b00f08f826dd4f623f8b233e4e8b221b8859bb5937ff45355f0ae29952 \
+                    size    8984348
 
 categories          sysutils
 license             LGPL-2.1+
-platforms           darwin
 maintainers         {ryandesign @ryandesign} openmaintainer
 
 description         Libvirt - The Virtualization API
@@ -30,7 +29,7 @@ homepage            https://libvirt.org
 master_sites        ${homepage}/sources/
 use_xz              yes
 
-set python_branch   3.9
+set python_branch   3.10
 set python_version  [string map {. {}} ${python_branch}]
 
 depends_build-append \
@@ -45,17 +44,22 @@ depends_build-append \
 
 depends_lib         port:curl \
                     path:lib/pkgconfig/glib-2.0.pc:glib2 \
-                    port:gnutls \
+                    path:lib/pkgconfig/gnutls.pc:gnutls \
                     port:libiconv \
                     port:libxml2 \
                     port:readline \
                     port:yajl \
                     port:zlib
 
-# error: You need at least XCode Clang v5.1 to compile QEMU
-compiler.blacklist-append apple-gcc* gcc-3.3 *gcc-4.* macports-clang-3.3 {clang < 503}
+# error: You need at least XCode Clang v10.0 to compile libvirt
+# error: You need at least Clang v6.0 to compile libvirt
+# error: You need at least GCC v7.4.0 to compile libvirt
+compiler.blacklist-append \
+                    apple-gcc* {clang < 1000} \
+                    gcc-3.3 *gcc-4.* *gcc-5.* *gcc-6.* \
+                    macports-clang-3.* macports-clang-5.0
 
-patchfiles-append   patch-meson.diff
+patchfiles-append   meson.build.patch
 
 # libvirt build scripts require python 3.x
 configure.python    ${prefix}/bin/python${python_branch}

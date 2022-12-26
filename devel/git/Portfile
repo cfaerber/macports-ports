@@ -1,11 +1,14 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           perl5 1.0
+PortGroup           legacysupport   1.1
+PortGroup           perl5           1.0
+
+legacysupport.newest_darwin_requires_legacy 10
 
 name                git
-version             2.34.1
-revision            2
+version             2.39.0
+revision            0
 
 description         A fast version control system
 long_description    Git is a fast, scalable, distributed open source version \
@@ -16,7 +19,6 @@ maintainers         {ciserlohn @ci42} \
 categories          devel
 license             GPL-2 LGPL-2.1+
 installs_libs       no
-platforms           darwin
 homepage            https://git-scm.com/
 master_sites        https://www.kernel.org/pub/software/scm/git/ \
                     https://cdn.kernel.org/pub/software/scm/git/
@@ -26,18 +28,18 @@ distfiles           git-${version}${extract.suffix} \
                     git-manpages-${version}${extract.suffix}
 
 checksums           git-${version}${extract.suffix} \
-                    rmd160  2bec7cddacda8f685e96ce6d534d6fc5ec7b5a84 \
-                    sha256  3a0755dd1cfab71a24dd96df3498c29cd0acd13b04f3d08bf933e81286db802c \
-                    size    6623760 \
+                    rmd160  3188d6fb3b010033723d0699a3d28a8edce3f6ce \
+                    sha256  ba199b13fb5a99ca3dec917b0bd736bc0eb5a9df87737d435eddfdf10d69265b \
+                    size    7157548 \
                     git-manpages-${version}${extract.suffix} \
-                    rmd160  295300e85a66565b204a903e5abd8dd2209956d8 \
-                    sha256  9c635dd772ff21bcc4b7bab9f0de0dd01afb34b0eda3c83907e026bd3b3c7eb8 \
-                    size    497280
+                    rmd160  8440eac6f1faf6d68efb3df047a4f5c77b8f2002 \
+                    sha256  7770f6d542cc34a2ccfaf02b82d7f9aefcd5d5156db847f36c218322671e9467 \
+                    size    556972
 
 perl5.require_variant   false
 perl5.conflict_variants yes
 perl5.branches          5.28 5.30 5.32 5.34
-perl5.default_branch    5.28
+perl5.default_branch    5.34
 perl5.create_variants   ${perl5.branches}
 
 depends_build-append \
@@ -52,21 +54,29 @@ depends_lib-append  port:curl \
 depends_run-append  path:bin/rsync:rsync
 
 patchfiles          patch-Makefile.diff \
-                    patch-git-gui-Makefile.diff \
                     patch-git-subtree.1.diff \
                     patch-sha1dc-older-apple-gcc-versions.diff \
                     patch-gitk-git-gitk.diff
+
 patch.pre_args      -p1
+
+# Git 2.36.0 implements a new FSEvent listener that uses
+# the API available in Yosemite and newer.
+if {${os.platform} eq "darwin" && ${os.major} < 14} {
+    patchfiles-append   patch-ignore-fsmonitor-daemon-backend.diff
+}
 
 extract.only        git-${version}${extract.suffix} \
                     git-manpages-${version}${extract.suffix}
 
 use_configure       no
 
+compiler.c_standard 1999
+
 variant universal   {}
 
-set CFLAGS          "-I. -Wall -O2 -I${prefix}/include [get_canonical_archflags cc]"
-set LDFLAGS         "-L${prefix}/lib [get_canonical_archflags ld]"
+set CFLAGS          "${configure.cflags} -std=gnu99 [get_canonical_archflags cc]"
+set LDFLAGS         "${configure.ldflags} [get_canonical_archflags ld]"
 
 build.args          CFLAGS="${CFLAGS}" \
                     LDFLAGS="${LDFLAGS}" \
@@ -115,6 +125,7 @@ pre-destroot {
 }
 
 set docdestroot         ${destroot}${prefix}/share/doc/git-doc
+set guidir              ${prefix}/share/git-gui/lib/Git\ Gui.app/Contents
 set system_gitconfig    ${prefix}/etc/gitconfig
 
 post-destroot {
@@ -151,6 +162,15 @@ post-destroot {
     xinstall -m 755 ${worksrcpath}/contrib/subtree/git-subtree.sh \
         ${destroot}${prefix}/libexec/git-core/git-subtree
 
+    # Tiger doesn't build the GUI, so check for its existence before mucking with it
+    if {[file exists "${destroot}${guidir}"]} {
+        # The executable could be "Wish" or "Wish Shell", depending on the OS version
+        set wish_executable [exec defaults read ${destroot}${guidir}/Info CFBundleExecutable]
+        # The system-provided Tk is now deprecated, so use the MacPorts version if available.
+        system "echo exec wish \"'${guidir}/Resources/Scripts/AppMain.tcl'\" '\"$@\"' > \
+            '${destroot}${guidir}/MacOS/${wish_executable}'"
+    }
+
     file delete -force ${share_path}/contrib
     copy ${worksrcpath}/contrib ${share_path}
 }
@@ -163,9 +183,9 @@ variant pcre description {Use pcre} {
 variant doc description {Install HTML and plaintext documentation} {
     distfiles-append        git-htmldocs-${version}${extract.suffix}
     checksums-append        git-htmldocs-${version}${extract.suffix} \
-                            rmd160  b9c7972dc870313b4e57d8af281dbd56f1e151d0 \
-                            sha256  7896a36c6497293c8d63d3bc120b063b6521eb1be7658540d1a6e67f0af5c4f3 \
-                            size    1406464
+                            rmd160  81510748e90e5613d6b971ffda81fad7fc352f49 \
+                            sha256  59dbbb0508854ca3e28859d01c225bbca1c90965a743e684cfe035cf45ed9c70 \
+                            size    1502900
 
     patchfiles-append       patch-git-subtree.html.diff
 
@@ -295,6 +315,10 @@ variant python description {Build with Python support} {
 }
 
 platform darwin 8 {
+    # https://trac.macports.org/ticket/66480
+    depends_build-append port:gmake-apple
+    build.cmd  ${prefix}/bin/gmake-apple
+
     build.args-append   NO_APPLE_COMMON_CRYPTO=1
     build.args-append   CC_LD_DYNPATH=-R
 }

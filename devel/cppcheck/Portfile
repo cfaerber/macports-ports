@@ -3,8 +3,8 @@
 PortSystem                  1.0
 PortGroup                   github 1.0
 
-github.setup                danmar cppcheck 2.6.3
-revision                    0
+github.setup                danmar cppcheck 2.9.3
+revision                    1
 
 categories                  devel
 license                     GPL-3
@@ -21,11 +21,11 @@ long_description            Cppcheck is an analysis tool for C and C++ code. Unl
 
 github.tarball_from         archive
 
-checksums                   rmd160  4b741a33b0ecce65064710810a546ec3f24c6422 \
-                            sha256  7a49ebb7a54356ade09867f466cb41ee4020ebf3732582762669e5c8903f16c8 \
-                            size    3880340
+checksums                   rmd160  69b7e9d52bde0c7bcf891d0a1eeab753aa0bf400 \
+                            sha256  46319ca73e33e4b2bd91981a76a0d4f184cd3f86b62dc18e8938eabacd3ad2e3 \
+                            size    3918291
 
-set python_branch   3.9
+set python_branch   3.10
 set python_version  [string map {"." ""} ${python_branch}]
 set python_bin      ${prefix}/bin/python${python_branch}
 
@@ -38,12 +38,11 @@ depends_lib                 port:pcre \
                             port:py${python_version}-pygments
 
 post-patch {
-    reinplace -W ${worksrcpath} "/CXXFLAGS/s/-O2/${configure.cxxflags}/" Makefile
     reinplace -W ${worksrcpath} "s|#!/usr/bin/env python|#!${python_bin}|" htmlreport/cppcheck-htmlreport
-
 }
 
 compiler.cxx_standard       2011
+compiler.thread_local_storage yes
 
 use_configure               no
 
@@ -52,13 +51,19 @@ variant universal {}
 set sharedir                ${prefix}/share/${name}
 
 build.target                all man
-build.args                  CXX="${configure.cxx} [get_canonical_archflags cxx]" \
+build.args                  CXX="${configure.cxx} [get_canonical_archflags cxx] ${configure.cxxflags}" \
                             DB2MAN=${prefix}/share/xsl/docbook-xsl-nons/manpages/docbook.xsl \
                             FILESDIR=${sharedir} \
                             HAVE_RULES=yes \
                             MATCHCOMPILER=yes \
                             PREFIX=${prefix} \
                             PYTHON_INTERPRETER=${python_bin}
+
+# https://trac.macports.org/ticket/66418
+platform darwin 8 {
+    depends_build-append    port:gmake-apple
+    build.cmd               gmake-apple
+}
 
 test.run                    yes
 test.target                 test

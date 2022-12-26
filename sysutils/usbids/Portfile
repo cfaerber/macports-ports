@@ -3,18 +3,18 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        usbids usbids 9b3a4dcf4a8cdaf2d6c3a5aca85571f93ffab625
-version             2021.10.24
+github.setup        usbids usbids a5edeafb6099d24bde605b628d0ba47a3502bdd8
+version             2022.05.20
 revision            0
-checksums           rmd160  c39a12ecf555a58478fb479533b74e017da09197 \
-                    sha256  3a94372f6bcb19378a0a968ac34bd2dd755ee0c879e2ed8c80a3bac804382f6e \
-                    size    263442
+checksums           rmd160  78544ce753af43f7edcef55e92386c9b599713bd \
+                    sha256  66bce7365bf54fff588b6bc9aa04148b1d21374e016aa9dce6a17fbc90fd80d2 \
+                    size    263749
 
 categories          sysutils
-platforms           darwin
 license             {GPL-2+ BSD}
-maintainers         {lbschenkel @lbschenkel} openmaintainer
+maintainers         nomaintainer
 supported_archs     noarch
+platforms           any
 
 description         The USB ID Repository
 long_description    This is a public repository of all known IDs used \
@@ -35,5 +35,5 @@ destroot {
 
 livecheck.version   ${version}
 livecheck.type      regex
-livecheck.url       https://raw.githubusercontent.com/usbids/usbids/master/usb.ids
+livecheck.url       ${github.raw}/master/usb.ids
 livecheck.regex     {Version: (\d{4}\.\d{2}\.\d{2})}

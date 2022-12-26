@@ -4,18 +4,17 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                commitizen
-version             2.20.2
-revision            1
+version             2.38.0
+revision            0
 categories-prepend  devel
-platforms           darwin
 license             MIT
 supported_archs     noarch
+platforms           {darwin any}
 
 python.default_version \
-                    39
+                    310
 
-maintainers         {@harens gmail.com:harensdeveloper} \
-                    openmaintainer
+maintainers         {@harens harens} openmaintainer
 
 description         Create committing rules for projects, auto bump versions, \
                     and auto changelog generation
@@ -26,14 +25,15 @@ long_description    Commitizen is a tool designed for teams. Its main purpose is
 
 homepage            https://${name}-tools.github.io/${name}/
 
-checksums           rmd160  d60334658ff57e2a6e95a7546673532c495c85a6 \
-                    sha256  4b8f5c0faa2603f05f4835dcaba318fbaa062e75c9041051547ff0d1e4bcead1 \
-                    size    31715
+checksums           rmd160  5b9a39703420014b5f86cbf95d73e64e48a94c81 \
+                    sha256  7daa217f703f330c18548304400d133a834840fd01bc79ef2966426c74bdbf1f \
+                    size    36242
 
-depends_lib-append \
+depends_build-append \
     port:py${python.version}-setuptools
 
 depends_run-append \
+    port:py${python.version}-chardet \
     port:py${python.version}-colorama \
     port:py${python.version}-decli \
     port:py${python.version}-jinja2 \
@@ -46,8 +46,8 @@ depends_run-append \
 default_variants    +bash_completion
 
 variant bash_completion {
-    depends_run-append  port:py${python.version}-argcomplete \
-                        path:etc/bash_completion:bash-completion
+    depends_lib-append      port:py${python.version}-argcomplete
+    depends_run-append      path:etc/bash_completion:bash-completion
 
     post-destroot {
         set bash-completions ${prefix}/share/bash-completion/completions

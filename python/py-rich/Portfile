@@ -4,13 +4,12 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-rich
-version             10.16.2
-platforms           darwin
+version             12.6.0
 license             MIT
 supported_archs     noarch
+platforms           {darwin any}
 
-maintainers         {@harens gmail.com:harensdeveloper} \
-                    openmaintainer
+maintainers         {@harens harens} openmaintainer
 
 description         Python library for rich text and beautiful formatting \
                     in the terminal
@@ -21,11 +20,11 @@ long_description    {*}${description}. The Rich API makes it easy to add color \
 
 homepage            https://rich.readthedocs.io/en/latest/
 
-checksums           rmd160 b3446ddc8f6e073cd4de7254f6c6e5af9058d0d2 \
-                    sha256 720974689960e06c2efdb54327f8bf0cdbdf4eae4ad73b6c94213cad405c371b \
-                    size   197585
+checksums           rmd160 09008c51f29046afb3053d4ec1d93ce6f7d5f8ce \
+                    sha256 ba3a3775974105c221d31141f2c116f4fd65c5ceb0698657a11e9f295ec93fd0 \
+                    size   220114
 
-python.versions     36 37 38 39 310
+python.versions     37 38 39 310
 
 if {${name} ne ${subport}} {
 
@@ -39,12 +38,6 @@ if {${name} ne ${subport}} {
     if {${python.version} < 38} {
         depends_run-append \
                         port:py${python.version}-typing_extensions
-    }
-
-    # Separate if statment since we want typing_extensions for py36 as well.
-    if {${python.version} eq 36} {
-        depends_run-append \
-                        port:py${python.version}-dataclasses
     }
 
     test.run            yes

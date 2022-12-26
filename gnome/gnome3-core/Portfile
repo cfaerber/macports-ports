@@ -100,7 +100,7 @@ depends_lib     port:adwaita-icon-theme \
                 path:lib/pkgconfig/gdk-pixbuf-2.0.pc:gdk-pixbuf2 \
                 port:gedit \
                 port:geocode-glib \
-                port:gjs \
+                path:lib/pkgconfig/gjs-1.0.pc:gjs \
                 path:lib/pkgconfig/glib-2.0.pc:glib2 \
                 port:glib-networking \
                 port:glibmm \
@@ -125,7 +125,7 @@ depends_lib     port:adwaita-icon-theme \
                 port:gnome-terminal \
                 port:gnome-user-docs \
                 port:gnome-weather \
-                port:gobject-introspection \
+                path:lib/pkgconfig/gobject-introspection-1.0.pc:gobject-introspection \
                 port:graphene \
                 port:grilo \
                 port:grilo-plugins \
@@ -162,7 +162,7 @@ depends_lib     port:adwaita-icon-theme \
                 port:libsecret \
                 port:libsigcxx2 \
                 port:libsigcxx3 \
-                port:libsoup \
+                path:lib/pkgconfig/libsoup-2.4.pc:libsoup \
                 port:libwnck3 \
                 port:libxml2 \
                 port:libxslt \

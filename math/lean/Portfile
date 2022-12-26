@@ -5,7 +5,7 @@ PortGroup           cmake 1.1
 PortGroup           github 1.0
 PortGroup           compiler_blacklist_versions 1.0
 
-github.setup        leanprover-community lean 3.35.1 v
+github.setup        leanprover-community lean 3.50.2 v
 revision            0
 
 categories          math
@@ -21,9 +21,9 @@ long_description    A fork of Lean 3 maintained and updated by the Lean \
 
 depends_lib-append  port:gmp
 
-checksums           rmd160  052d0758bca7dfe573c7f45c7bd7f834fde991a3 \
-                    sha256  0c2a39094d7080736a975e8d5d7fa4fc1995e636f5a5ed115bb5b5dd1d64ed10 \
-                    size    1872621
+checksums           rmd160  ff789ad946cc2534b998889a6616a8124d2ad832 \
+                    sha256  00ece30d87fc4183c29431fa324300698678bb89e8c9eb7d965df786ceb4b869 \
+                    size    1918644
 
 # use older MACH defines on systems before 10.8
 patchfiles          patch-lean-util-memory-older-MACH-defines.diff

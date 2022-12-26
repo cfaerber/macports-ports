@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           openssl 1.0
 
 name                stunnel
-version             5.61
+version             5.67
 revision            0
 set major           [lindex [split ${version} .] 0]
 categories          security net
@@ -27,15 +27,31 @@ master_sites        https://www.stunnel.org/downloads/archive/${major}.x/ \
                     http://ftp.nluug.nl/pub/networking/stunnel/archive/${major}.x/ \
                     http://stunnel.cybermirror.org/archive/${major}.x/
 
-checksums           rmd160  24f0e27274c192410393643574a8a6b766d0cb09 \
-                    sha256  91ea0ca6482d8f7e7d971ee64ab4f86a2817d038a372f0893e28315ef2015d7a \
-                    size    873660
+checksums           rmd160  80bb9616fbab5aef8a09187277df1d99708aabee \
+                    sha256  3086939ee6407516c59b0ba3fbf555338f9d52f459bcab6337c0f00e91ea8456 \
+                    size    881256
 
-patchfiles          patch-configure
+openssl.branch      no_version
+
+patchfiles          patch-configure \
+                    patch-src-client.c.diff
 
 configure.args      --disable-libwrap \
-                    --disable-silent-rules \
+                    --disable-silent-rules
+
+variant openssl1 conflicts openssl3 description (Use openssl 1.1.1) {
+    openssl.branch  1.1
+    configure.args-append \
                     --with-ssl=[openssl::install_area]
+}
+
+variant openssl3 conflicts openssl1 description (Use openssl 3) {
+    openssl.branch  3
+    configure.args-append \
+                    --with-ssl=[openssl::install_area]
+}
+
+default_variants    +openssl3
 
 # libwrap has been reported to introduce some problems with stunnel 4.18.
 # See: https://trac.macports.org/ticket/11028
@@ -44,12 +60,9 @@ variant libwrap description {Include libwrap support} {
     configure.args-delete   --disable-libwrap
 }
 
-variant openssl1 description (Use openssl 1.1.1) {
-   openssl.branch   1.1
-}
-
 if {${os.arch} ne "powerpc"} {
-    default_variants    +libwrap
+    default_variants-append  \
+                    +libwrap
 }
 
 livecheck.type      regex

@@ -4,14 +4,13 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                buildbot-www
-version             3.4.0
+version             3.7.0
 revision            0
-checksums           rmd160  d4b2d9257d1aa3b980dbf15b3b01a238c557dd0d \
-                    sha256  eb965b0a236dc47dd88c071d86fe5cc1250dacb4fae6395087fda82fcdf8d93c \
-                    size    3182445
+checksums           rmd160  e1dc2501db63087fba8f82c8d7509f6470e7b2f7 \
+                    sha256  b78c477e8c7a8793d8e3ea6174241b0a51ddefbf967e951612b31908470cc6ed \
+                    size    3210523
 
 categories          devel
-platforms           darwin
 maintainers         {ryandesign @ryandesign} {rajdeep @rajdeepbh} {mojca @mojca} openmaintainer
 license             GPL-2
 supported_archs     noarch
@@ -22,7 +21,7 @@ long_description    {*}${description}
 homepage            https://buildbot.net
 
 python.default_version \
-                    39
+                    310
 
 depends_build-append \
                     port:buildbot-pkg

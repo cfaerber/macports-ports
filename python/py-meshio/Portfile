@@ -4,9 +4,8 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-meshio
-version             5.2.2
+version             5.3.4
 revision            0
-categories          python
 license             MIT
 maintainers         {mps @Schamschula} openmaintainer
 description         There are various mesh formats available for representing \
@@ -18,12 +17,13 @@ long_description    {*}${description} meshio can read and write all of the follo
                     (format versions 2.2, 4.0, and 4.1), OBJ, OFF, PERMAS, PLY, STL, \
                     Tecplot .dat, TetGen .node/.ele, SVG (2D only, output only), SU2, \
                     UGRID, VTK, VTU, WKT (TIN), XDMF.
+supported_archs     noarch
+platforms           {darwin any}
 homepage            https://github.com/nschloe/meshio
-platforms           darwin
 
-checksums           rmd160  f9ef56770ee70d884c0ec38b5371d2f22bb2bf26 \
-                    sha256  209885ac31b00155e43c27859d1aff0ba7f97f319ee7bed453a8b9e1677a4e52 \
-                    size    491219
+checksums           rmd160  c5ecd5f1239f2068bcb73f54edd16aaf085314be \
+                    sha256  e240692d7ff279c12b13c6e5d7b403629a86ad2b44e9230958b3f00c1ec369f0 \
+                    size    492100
 
 python.versions     37 38 39 310
 

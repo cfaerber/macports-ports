@@ -3,9 +3,8 @@
 PortSystem          1.0
 
 name                xapian-core
-version             1.4.19
+version             1.4.21
 categories          devel
-platforms           darwin
 maintainers         {ryandesign @ryandesign} openmaintainer
 license             GPL-2+
 
@@ -32,9 +31,9 @@ if {${subport} eq ${name}} {
     # version.h does not get generated properly when there are multiple -arch flags
     PortGroup                   muniversal 1.0
 
-    checksums                   rmd160  18ec48a84cbf1e0e4d137374f07e9b4d054b35de \
-                                sha256  1fca48fca6cc3526cc4ba93dd194fe9c1326857b78edcfb37e68d086d714a9c3 \
-                                size    2994860
+    checksums                   rmd160  949c17d21b4c10d2049709e8d8d94d29d317fb04 \
+                                sha256  80f86034d2fb55900795481dfae681bfaa10efbe818abad3622cdc0c55e06f88 \
+                                size    3018384
 
     # TODO: Fix xapian-config to not require the .la file
     # /opt/local/bin/xapian-config --ltlibs --cxxflags
@@ -61,9 +60,9 @@ if {${subport} eq ${name}} {
 
 subport xapian-omega {
     revision                    0
-    checksums                   rmd160  e10d7cf7946bc176889a5d1cc53a6a9c1a1a6011 \
-                                sha256  e4b2ef287e55df6754a1cb13b7677231bfda6df22567d28944046f6994d5cd8c \
-                                size    553680
+    checksums                   rmd160  76e86b497a3c57a6b188ad6c734da6ac17067a92 \
+                                sha256  88a113c5598fc95833e1212c70be463abb9d5601564d21b861636f737955aad5 \
+                                size    568440
 
     description                 web application using the Xapian library
     long_description            Xapian Omega is an application built on the \
@@ -76,7 +75,7 @@ subport xapian-omega {
 
     depends_lib                 port:libiconv \
                                 port:libmagic \
-                                port:pcre \
+                                port:pcre2 \
                                 port:xapian-core \
                                 port:zlib
 
@@ -84,9 +83,9 @@ subport xapian-omega {
 }
 
 if {[string match {xapian-bindings-*} ${subport}]} {
-    checksums                   rmd160  2464d8001e7789ef6393ed4e83f4f23ce83e2274 \
-                                sha256  91c385a48951aa7cdf665effd25533f7477fc22781ca712e50b5496459a2883d \
-                                size    1137596
+    checksums                   rmd160  e416673ae0e97f6a1b5c8b1c7d54e8128eb8c486 \
+                                sha256  e7bf1e4982b91f841289d19214021d88371ca2a6c7304df59049d7da78b83ced \
+                                size    1151620
 
     homepage                    ${homepage}/docs/bindings/
 
@@ -134,7 +133,7 @@ subport xapian-bindings-java {
 }
 
 # Perl
-foreach v {5.26 5.28 5.30 5.32} {
+foreach v {5.28 5.30 5.32 5.34} {
     subport xapian-bindings-perl${v} "
         revision                0
 

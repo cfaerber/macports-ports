@@ -3,10 +3,9 @@
 PortSystem          1.0
 
 name                execline
-version             2.8.2.0
+version             2.9.0.1
 revision            0
 categories          lang
-platforms           darwin
 license             ISC
 maintainers         nomaintainer
 description         non-interactive scripting language
@@ -26,9 +25,9 @@ master_sites        ${homepage}
 
 depends_build       port:skalibs
 
-checksums           rmd160  ae0ab3483f6a14f6f2048e11eafa6a8825220bbe \
-                    sha256  2fdf7607f306e94fe42ebe2b49872d0f654aa2297a576d5a2d8037d4d9583341 \
-                    size    98438
+checksums           rmd160  f25acf29fe7389606e95285ace6531ee9533e9df \
+                    sha256  01260fcaf80ffbca2a94aa55ea474dfb9e39b3033b55c8af88126791879531f6 \
+                    size    100330
 
 configure.args      --disable-shared \
                     --with-lib=${prefix}/lib/skalibs

@@ -5,13 +5,12 @@ PortGroup           python 1.0
 
 # Remember to update libvirt and py-libvirt at the same time.
 name                py-libvirt
-version             7.10.0
+version             8.10.0
 revision            0
-checksums           rmd160  22b832585d0f0f9516dc2bc9cc065ba21c261db0 \
-                    sha256  267774bbdf99d47515274542880499437dc94ae291771f5663c62020a62da975 \
-                    size    218394
+checksums           rmd160  5b1118c063ad49b5f84871eae8d68c82dac2e519 \
+                    sha256  fc30f136abe0b8228029a90814c8f44ac2947433c12f211363051c57df2d5401 \
+                    size    240925
 
-platforms           darwin
 license             MIT
 maintainers         {ryandesign @ryandesign} openmaintainer
 
@@ -26,8 +25,7 @@ homepage            https://libvirt.org
 master_sites        ${homepage}/sources/python
 distname            libvirt-python-${version}
 
-python.versions     35 36 37 38 39 310
-
+python.versions     37 38 39 310 311
 
 if {${name} ne ${subport}} {
     depends_build       port:py${python.version}-setuptools \

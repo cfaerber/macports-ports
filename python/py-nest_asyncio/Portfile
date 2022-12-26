@@ -4,14 +4,15 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-nest_asyncio
-version             1.5.4
+version             1.5.6
 revision            0
 categories-append   devel
-platforms           darwin
 license             BSD
 supported_archs     noarch
+platforms           {darwin any}
 
 python.versions     37 38 39 310
+python.pep517       yes
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -20,13 +21,11 @@ long_description    {*}${description}
 
 homepage            https://github.com/erdewit/nest_asyncio
 
-checksums           rmd160  79e5c321a0dcda2e018396113812ff3b310cbf1b \
-                    sha256  f969f6013a16fadb4adcf09d11a68a4f617c6049d7af7ac2c676110169a63abd \
-                    size    5893
+checksums           rmd160  5eeb3941927b567cba3bc430e7c8406b41074d39 \
+                    sha256  d267cc1ff794403f7df692964d1d2a3fa9418ffea2a3f6859a439ff482fef290 \
+                    size    7444
 
 if {${name} ne ${subport}} {
     depends_build-append \
-                        port:py${python.version}-setuptools
-
-    livecheck.type      none
+                        port:py${python.version}-setuptools_scm
 }

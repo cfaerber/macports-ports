@@ -2,8 +2,9 @@
 
 PortSystem          1.0
 PortGroup           github 1.0
+PortGroup           legacysupport 1.1
 
-github.setup        universal-ctags ctags 5.9.20211226.0 p
+github.setup        universal-ctags ctags 5.9.20221204.0 p
 name                universal-ctags
 epoch               1
 revision            0
@@ -23,21 +24,12 @@ long_description \
 
 homepage            https://ctags.io
 
-checksums           rmd160  91a302f2aa1366d0faf5f304d14d59e46342fde2 \
-                    sha256  dde5d3e00cd11e776c458fed4d97a8b313b43b1bc163ec24e86cfe06d886efaa \
-                    size    2807569
+checksums           rmd160  c75b4c61820d836411b727bec4c4d1ebb99d90e8 \
+                    sha256  9030c7806da616d9db7dfbb1eebaba92aabf8c5599f340f0e5faabcf59344156 \
+                    size    2994141
 
-pre-patch {
-    if {![file exists ${prefix}/bin/rst2man.py]} {
-        set files [glob -directory ${prefix}/bin "rst2man-*.py"]
-        foreach f $files {
-            if {[regexp {rst2man-.*\.py} $f result]} {
-                reinplace "s|rst2man3.py|${result}|g" \
-                    ${worksrcpath}/configure.ac
-            }
-        }
-    }
-}
+# LegacySupport is needed for strnlen before 10.7
+legacysupport.newest_darwin_requires_legacy 10
 
 use_autoconf        yes
 autoconf.cmd        ./autogen.sh
@@ -49,6 +41,7 @@ depends_build       port:autoconf \
                     port:libtool
 
 depends_lib         port:jansson \
+                    port:pcre2 \
                     port:libyaml
 
 universal_variant   no
@@ -75,5 +68,11 @@ variant libxml2 description {Extra support for XML based languages} {
 }
 
 variant manpages description {Enable documentation} {
-    depends_build-append    port:py-docutils
+    set python_branch       3.10
+    set python_version      [string map {. {}} ${python_branch}]
+
+    depends_build-append    port:py${python_version}-docutils
+
+    configure.args-append   --with-rst2man=${prefix}/bin/rst2man-${python_branch}.py \
+                            --with-rst2html=${prefix}/bin/rst2html-${python_branch}.py
 }

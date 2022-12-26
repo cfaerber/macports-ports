@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           python 1.0
 
-github.setup        pyviz holoviews 1.14.7 v
+github.setup        pyviz holoviews 1.15.3 v
 revision            0
 categories-prepend  science
 license             BSD
@@ -14,11 +14,13 @@ description         HoloViews is an open-source Python library designed to make 
 long_description    {*}${description} With HoloViews, you can usually express what you \
                     want to do in very few lines of code, letting you focus on what you \
                     are trying to explore and convey, not on the process of plotting.
-platforms           darwin
+supported_archs     noarch
+platforms           {darwin any}
+homepage            https://github.com/holoviz/holoviews
 
-checksums           rmd160  d2bf7e3e49e0f1564d80fca2194d57eccadb3866 \
-                    sha256  91f800152cc0ce9e91e32797e8c53229781f4bea8131b8261b71b923785ffc42 \
-                    size    4807259
+checksums           rmd160  0b8b9a775f9f4a5c2917ca98070227db984068bc \
+                    sha256  7e4e268e0ae280a9f9413830648117a61ed505072ee924b8a145ba922c5326a5 \
+                    size    4815830
 
 variant python37 conflicts python38 python39 python310 description {Use Python 3.7} {}
 variant python38 conflicts python37 python39 python310 description {Use Python 3.8} {}
@@ -26,8 +28,8 @@ variant python39 conflicts python37 python38 python310 description {Use Python 3
 variant python310 conflicts python37 python38 python39 description {Use Python 3.10} {}
 
 if {![variant_isset python37] && ![variant_isset python38]
-        && ![variant_isset python310]} {
-    default_variants +python39
+        && ![variant_isset python39]} {
+    default_variants +python310
 }
 
 foreach pv {310 39 38 37} {

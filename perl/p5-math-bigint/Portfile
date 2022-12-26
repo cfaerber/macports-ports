@@ -4,19 +4,19 @@ PortSystem          1.0
 PortGroup           perl5 1.0
 
 perl5.branches      5.28 5.30 5.32 5.34
-perl5.setup         Math-BigInt 1.999828
+perl5.setup         Math-BigInt 1.999837
 revision            0
 maintainers         nomaintainer
 categories-append   math
 license             {Artistic-1 GPL}
-platforms           darwin
+platforms           {darwin any}
 
 description         Arbitrary size integer math package
 long_description    ${description}
 
-checksums           rmd160  16b4fe9c1249b33ca36ae104d310271446bafe9c \
-                    sha256  6fe2579ea73203523e6202ab6dfa901624bdd5d5d8d8fe95d38998fa9133dc36 \
-                    size    3077297
+checksums           rmd160  6de16af9ef923a8e9d443f4cca4aff659e90887d \
+                    sha256  038f9aad6318f20a84a7b1afe3087a1b02406c9988ce5919311a797f85a32962 \
+                    size    2869976
 
 if {${perl5.major} != ""} {
     depends_lib-append \

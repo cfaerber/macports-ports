@@ -4,26 +4,24 @@ PortSystem          1.0
 PortGroup           perl5 1.0
 
 perl5.branches      5.28 5.30 5.32 5.34
-perl5.setup         IO-Socket-SSL 2.073 ../../authors/id/S/SU/SULLR
+perl5.setup         IO-Socket-SSL 2.078 ../../authors/id/S/SU/SULLR
 revision            0
-platforms           darwin
-maintainers         nomaintainer
 license             {Artistic-1 GPL}
-supported_archs     noarch
-
+maintainers         nomaintainer
 description         Nearly transparent SSL encapsulation for IO::Socket::INET
-
 long_description    IO::Socket::SSL is a class implementing an object \
                     oriented interface to SSL sockets. The class is a \
                     descendent of IO::Socket::INET.
 
-checksums           rmd160  b6e9965c2593e08f1af6481153b41cb7b2e540c9 \
-                    sha256  b2c0b34df97cb1aa816221cee2454a1efd89b86ccbda810389a30e0d08cf57c8 \
-                    size    253730
+platforms           {darwin any}
+supported_archs     noarch
+
+checksums           rmd160  553d0fd82ede75495fd28ab2df4634a9b265ff20 \
+                    sha256  4cf83737a72b0970948b494bc9ddab7f725420a0ca0152d25c7e48ef8fa2b6a1 \
+                    size    258997
 
 if {${perl5.major} ne ""} {
     depends_build-append \
-                    port:p${perl5.major}-io-socket-inet6 \
                     port:p${perl5.major}-io-socket-ip
 
     depends_lib-append \

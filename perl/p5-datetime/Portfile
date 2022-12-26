@@ -5,7 +5,7 @@ PortGroup           perl5 1.0
 
 epoch               2
 perl5.branches      5.28 5.30 5.32 5.34
-perl5.setup         DateTime 1.55 ../../authors/id/D/DR/DROLSKY
+perl5.setup         DateTime 1.59 ../../authors/id/D/DR/DROLSKY
 revision            0
 license             Artistic-2
 maintainers         nomaintainer
@@ -17,15 +17,16 @@ long_description    DateTime is a class for the representation of \
 
 platforms           darwin
 
-checksums           rmd160  480d349748813a80bf6efdfd79bdc7ab8a277efa \
-                    sha256  83eee03e377e0e6f8bdaa250353b5860a551b69cec46a327e489145b97f5abd0 \
-                    size    319958
+checksums           rmd160  1931abb3f0dbeaa2aa3c3c0ff9fa33b4ee41ae11 \
+                    sha256  de3e9a63ce15470b4db4adad4ba6ac8ec297d88c0c6c6b354b081883b0a67695 \
+                    size    324023
 
 if {${perl5.major} != ""} {
     depends_build-append \
                     port:p${perl5.major}-cpan-meta-check \
                     port:p${perl5.major}-test-fatal \
-                    port:p${perl5.major}-test-warnings
+                    port:p${perl5.major}-test-warnings \
+                    port:p${perl5.major}-test-without-module
 
     depends_lib-append \
                     port:p${perl5.major}-datetime-locale \

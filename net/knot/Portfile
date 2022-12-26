@@ -7,7 +7,7 @@ PortGroup           legacysupport 1.1
 legacysupport.newest_darwin_requires_legacy 15
 
 name                knot
-version             3.1.5
+version             3.2.4
 revision            0
 categories          net
 license             GPL-3+
@@ -15,21 +15,20 @@ maintainers         {mps @Schamschula} openmaintainer
 description         Knot DNS is a high-performance authoritative-only DNS server which \
                     supports all key features of the modern domain name system.
 long_description    {*}${description}
-platforms           darwin
 homepage            https://www.knot-dns.cz
 master_sites        https://secure.nic.cz/files/knot-dns/ \
                     https://sources.openwrt.org
 
 use_xz              yes
 
-checksums           rmd160  751b6435edfb4290a0e3a2bda214709fe8e7396e \
-                    sha256  2da6e50b0662297d55f80e349568224e07fe88cad20bee1d2e22f54bb32da064 \
-                    size    1414500
+checksums           rmd160  405bcfe0f082ec99045544d8500e00b02bc1f00c \
+                    sha256  299e8de918f9fc7ecbe625b41cb085e47cdda542612efbd51cd5ec60deb9dd13 \
+                    size    1674532
 
 depends_build       port:pkgconfig
 
 depends_lib         port:fstrm \
-                    port:gnutls \
+                    path:lib/pkgconfig/gnutls.pc:gnutls \
                     port:libidn2 \
                     port:lmdb \
                     port:nghttp2 \

@@ -14,18 +14,15 @@ maintainers         {ra1nb0w @ra1nb0w} openmaintainer
 description         NanoVNASaver is a multiplatform tool to save Touchstone files from the NanoVNA hardware
 long_description    ${description}
 
-github.setup        NanoVNA-Saver nanovna-saver 0.3.10 v
-checksums           rmd160  c279bd34a84589ac11bd9d1313b056cd7545c0df \
-                    sha256  4339de3eb6ba39dbf9a3ea2e5e0114ebc7aca894c2b77670b5acf05362832cf9 \
-                    size    477945
+github.setup        NanoVNA-Saver nanovna-saver 0.5.3 v
+checksums           rmd160  eef9363197dac4ebdfc533b05a7dbc4105f1ccc2 \
+                    sha256  64577f31c5d530a5efe2d4dc9590a7049467a13b5e57b135c0a81206095654a3 \
+                    size    490386
 revision            0
 
 github.livecheck.regex  {([0-9.]+)}
 
-python.versions     39
-
-patchfiles-append \
-    setup.py.patch
+python.versions     310
 
 depends_build-append \
     port:py${python.version}-setuptools

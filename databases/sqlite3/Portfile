@@ -5,7 +5,7 @@ PortGroup           clang_dependency 1.0
 
 name                sqlite3
 # don't forget to update the checksums for sqlite3-tools when updating sqlite3
-version             3.37.2
+version             3.40.0
 revision            0
 categories          databases
 platforms           darwin
@@ -29,9 +29,9 @@ master_sites        ${homepage}2022
 set padded_ver      [string range [subst [regsub -all {\.([0-9]+)} "${version}.0.0" {[format %02d \1]}]] 0 6]
 distname            sqlite-autoconf-${padded_ver}
 
-checksums           rmd160  e802fa762369a0e6f04b3b3a55157062a0857493 \
-                    sha256  4089a8d9b467537b3f246f217b84cd76e00b1d1a971fe5aca1e30e230e46b2d8 \
-                    size    3001797
+checksums           rmd160  dcc3219cad58e5105bba6158c1060af107cea032 \
+                    sha256  0333552076d2700c75352256e91c78bf5cd62491589ba0c69aed0a81868980e7 \
+                    size    3097756
 
 depends_lib         port:libedit \
                     port:ncurses \
@@ -40,6 +40,10 @@ depends_lib         port:libedit \
 if {${os.platform} eq "darwin" && ${os.major} < 11 && ${cxx_stdlib} eq "libc++"} {
     # This port is in the dependency chain for clang 3.7 and later
     clang_dependency.extra_versions 3.7
+}
+
+if {${subport} ne "${name}-tools"} {
+    configure.checks.implicit_function_declaration.whitelist-append strchr
 }
 
 configure.args      --enable-threadsafe \
@@ -98,18 +102,15 @@ subport ${name}-tcl {
 
 subport ${name}-tools {
     distname                sqlite-src-${padded_ver}
+
     description             A bundle of command-line tools for managing SQLite \
                             database files
-
-    long_description        A bundle of command-line tools for managing SQLite \
-                            database files, including the sqldiff program and the \
+    long_description        {*}${description}, including the sqldiff program and the \
                             sqlite3_analyzer program.
 
-    checksums       rmd160  f96afdde9546051970a06f8af7222daa4ce93088 \
-                    sha256  486770b4d5f88b5bb0dba540dd6ee1763067d7539dfee18a7c66fe9bb03d16d9 \
-                    size    13145234
-
-
+    checksums               rmd160  c945d6426222492c33e6bce4854e9a724e6e5b2f \
+                            sha256  48550828142051293e179ffc6a8520f6fbfd82e1cdca78b93792f766cc89b8e2 \
+                            size    13723231
 
     use_zip                 yes
     depends_lib             port:tcl \

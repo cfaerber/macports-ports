@@ -4,7 +4,7 @@ PortSystem              1.0
 PortGroup               python 1.0
 
 name                    jc
-version                 1.17.6
+version                 1.22.3
 revision                0
 
 homepage                https://pypi.org/project/jc
@@ -20,14 +20,14 @@ categories              sysutils textproc python
 license                 MIT
 maintainers             {gmail.com:herby.gillot @herbygillot} \
                         openmaintainer
-platforms               darwin
 supported_archs         noarch
+platforms               {darwin any}
 
-checksums               rmd160  f74da16021e53719f2b48eba86086d7c98314b0b \
-                        sha256  581b4a18174adfe6a2aadf681f716adfcc6fb99454cd8410126a1c6ab9a33f16 \
-                        size    167625
+checksums               rmd160  ad1d81e0990de7d4a1364665168d17b7fd63edb6 \
+                        sha256  6f73a67c082927f2b3181620fec38415d698e20e18d918a430fd539ee13e2764 \
+                        size    389919
 
-python.default_version  39
+python.default_version  310
 
 depends_build-append    port:py${python.version}-setuptools
 

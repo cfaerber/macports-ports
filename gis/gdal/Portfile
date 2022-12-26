@@ -9,13 +9,14 @@ PortGroup           compiler_blacklist_versions 1.0
 PortGroup           legacysupport 1.0
 PortGroup           conflicts_build 1.0
 PortGroup           debug 1.0
+
 mpi.setup
 
-github.setup        OSGeo gdal 3.4.0 v
+github.setup        OSGeo gdal 3.4.3 v
 revision            0
-checksums           rmd160  d0f1f21ac90b2aecbe03e525b7296585f2192d47 \
-                    sha256  ac7bd2bb9436f3fc38bc7309704672980f82d64b4d57627d27849259b8f71d5c \
-                    size    13247444
+checksums           rmd160  ea129e923a2318e2ddea23d0c218395de3d48dad \
+                    sha256  02a27b35899e1c4c3bcb6007da900128ddd7e8ab7cd6ccfecf338a301eadad5a \
+                    size    13275504
 
 categories          gis
 license             MIT BSD
@@ -27,11 +28,11 @@ description         GDAL - Geospatial Data Abstraction Library
 
 long_description    GDAL is a translator library for raster geospatial \
                     data formats that is released under an X/MIT style \
-                    Open Source license. As a library, it presents a \
-                    single abstract data model to the calling application \
+                    Open Source license. As a library, it presents \
+                    a single abstract data model to the calling application \
                     for all supported formats. The related OGR library \
-                    (which lives within the GDAL source tree) provides a \
-                    similar capability for simple features vector data.
+                    (which lives within the GDAL source tree) provides \
+                    a similar capability for simple features vector data.
 
 homepage            https://www.gdal.org/
 master_sites        https://download.osgeo.org/gdal/${version}/
@@ -40,7 +41,7 @@ use_xz              yes
 # error: call to 'abs' is ambiguous
 compiler.blacklist-append {clang < 900}
 
-compiler.cxx_standard     2014
+compiler.cxx_standard 2014
 # See https://trac.macports.org/ticket/56908
 compiler.thread_local_storage yes
 
@@ -188,7 +189,7 @@ configure.args-append                                   \
                     --enable-driver-elastic             \
                     --enable-driver-ngw                 \
                     --enable-driver-plscenes            \
-                    --enable-driver-wfs                 
+                    --enable-driver-wfs
 
 # These drivers require sqlite3
 configure.args-append                                   \
@@ -202,7 +203,7 @@ configure.args-append                                   \
 configure.args-append                                   \
                     --enable-driver-ods                 \
                     --enable-driver-xlsx                \
-                    --enable-driver-lvbag  
+                    --enable-driver-lvbag
 
 # Miscellaneous drivers
 configure.args-append                                   \
@@ -260,8 +261,14 @@ configure.args-append                                   \
                     --without-poppler                   \
                     --mandir=${prefix}/share/man
 
+platform darwin {
+    if {${build_arch} eq "ppc" || ${build_arch} eq "ppc64"} {
+    patchfiles-append patch-limits.diff
+    }
+}
+
 # Always choose internal libjson code (#44098)
-configure.args-append   --with-libjson-c=internal
+configure.args-append --with-libjson-c=internal
 
 # for all platforms without C++11 support
 # this is just a suboptimal approximation (doesn't hold for gcc)
@@ -271,7 +278,7 @@ if {${configure.cxx_stdlib} eq "libc++"} {
 
 pre-configure {
     # see https://trac.macports.org/ticket/56517
-    if {[string match *clang* ${configure.cxx}]} {
+    if {[string match *clang* ${configure.cxx}] && ${configure.cxx_stdlib} ne ""} {
         configure.ldflags-append -stdlib=${configure.cxx_stdlib}
     }
 
@@ -317,11 +324,13 @@ variant libkml \
 }
 
 variant grass description {Enable GRASS 7 GIS I/O} {
-    if {[catch {lindex [registry_active grass7] 0}]} {
-        ui_error "The grass variant requires grass 7 to be installed."
-        ui_error "Since grass7 depends on gdal, please first install gdal WITHOUT the grass variant."
-        ui_error "Then install grass7, then reinstall gdal with the grass variant."
-        #return -code error "Missing GRASS 7."
+    pre-configure {
+        if {[catch {lindex [registry_active grass7] 0}]} {
+            ui_error "The grass variant requires grass 7 to be installed."
+            ui_error "Since grass7 depends on gdal, please first install gdal WITHOUT the grass variant."
+            ui_error "Then install grass7, then reinstall gdal with the grass variant."
+            return -code error "Missing GRASS 7."
+        }
     }
 
     configure.args-delete   --without-grass
@@ -450,8 +459,10 @@ variant netcdf description {Enable NetCDF file format} {
 }
 
 #JPEG-2K
-variant jasper {
+variant jasper description {Enable Jasper support} {
+    pre-configure {
     return -code error "The Jasper variant is deprecated. Use +openjpeg for JPEG2K support."
+    }
 }
 
 variant openjpeg \
@@ -467,8 +478,8 @@ variant xerces description {Enable xerces XML support for GML file format} {
     configure.args-append   --with-xerces=${prefix}
 
     # These drivers need xerces-c
-    configure.args-append   --enable-driver-nas 
-    configure.args-append    --enable-driver-ili 
+    configure.args-append   --enable-driver-nas
+    configure.args-append    --enable-driver-ili
     configure.args-append    --enable-driver-gmlas
 }
 
@@ -527,14 +538,14 @@ variant odbc description {Enable ODBC support} {
 
     # These drivers depend on odbc
     configure.args-append    --enable-driver-odbc
-    configure.args-append    --enable-driver-pgeo 
+    configure.args-append    --enable-driver-pgeo
     configure.args-append    --enable-driver-mssqlspatial
     configure.args-append    --enable-driver-geomedia
     configure.args-append    --enable-driver-walk
 }
 
 variant poppler description {Enable poppler support} {
-    depends_lib-append      port:poppler
+    depends_lib-append      path:lib/pkgconfig/poppler.pc:poppler
     configure.args-delete   --without-poppler
     configure.args-append   --with-poppler=${prefix} \
                             --enable-driver-pdf

@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/vmware-tanzu/carvel-kapp 0.43.0 v
+go.setup            github.com/vmware-tanzu/carvel-kapp 0.54.1 v
+go.package          github.com/k14s/kapp
 github.tarball_from archive
 name                kapp
 revision            0
@@ -29,16 +30,19 @@ license             Apache-2
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  5d0330939cb609047cb9bf88bdbfc585d0223aac \
-                    sha256  5241914e455df115f75147e5c28060fa9e94c42f642ca53e34b6dec296953258 \
-                    size    6241734
+checksums           rmd160  2f0174952afc1dd4e633aad3972722956fe7536a \
+                    sha256  a2aff8d6771d890c12f0b3d7fcd05c460474b370bc9c4cc944b40717d7b1f494 \
+                    size    7086147
 
-# Allow fetching dependencies at build time.
-build.env-delete            GO111MODULE=off GOPROXY=off
+# Allow Go modules (needed for -mod=vendor)
+build.env-delete            GO111MODULE=off
 
 build.env-append            CGO_ENABLED=0
 
-build.pre_args-append       -mod=vendor
+build.pre_args-append       \
+    -mod=vendor \
+    -ldflags \"-X ${go.package}/pkg/kapp/version.Version=v${version}\"
+
 build.args                  ./cmd/${name}
 
 destroot {

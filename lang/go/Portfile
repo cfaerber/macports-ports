@@ -7,15 +7,34 @@ PortGroup           legacysupport 1.1
 legacysupport.newest_darwin_requires_legacy 16
 
 name                go
-epoch               2
+epoch               3
 
-version             1.17.6
+# IMPORTANT:
+#
+# When updating major versions, please ensure that you have committed and
+# tested the candidate version using the `go-devel` port, to verify how it
+# builds against current and older versions of macOS.
+
+# Go 1.18 does not build on macOS 10.12 and older
+if {${os.platform} eq "darwin" && ${os.major} < 17} {
+    version         1.17.13
+    set unsupported_macos true
+} else {
+    version         1.19.4
+    set unsupported_macos false
+}
+
 revision            0
+
+set legacy_build    true
 
 # Subport for Go Unstable Version
 subport ${name}-devel {
-    version         1.18beta1
+    version         1.20rc1
     revision        0
+    epoch           1
+
+    set legacy_build false
 }
 
 homepage            https://golang.org
@@ -41,34 +60,63 @@ set go_src_dist     go${version}.src${extract.suffix}
 set go_armbin_dist  go${version}.darwin-arm64${extract.suffix}
 set go_amdbin_dist  go${version}.darwin-amd64${extract.suffix}
 
+livecheck.type      regex
+livecheck.url       ${homepage}/dl/
+
 if {$subport eq "${name}-devel"} {
     # Go (DEVEL / UNSTABLE)
     checksums       ${go_src_dist} \
-                    rmd160  d37a45365b7df68498764b3924efad7d90a95935 \
-                    sha256  418c028db14699cb5b2d4907ad3a419d79f789b31916ef8764867e4a78e653a1 \
-                    size    22750283 \
+                    rmd160  3a6d93008098ab9d8908b42b2a855b5607e11809 \
+                    sha256  1731054ca984f25fdd083d048edfa08210cc9167f5a086a71deba128c713b414 \
+                    size    26146884 \
                     ${go_armbin_dist} \
-                    rmd160  b9cdfa3db99e16c85a7753c5f9e6b702d890e99e \
-                    sha256  09b7718f2354acb9826eef27f8257ac41c77df6389b14e91af09b90f79f200e8 \
-                    size    137381896 \
+                    rmd160  f1218688c176d9a453271b2d5588de680915be11 \
+                    sha256  05b80ba6576e4f7070f7c0ae7d4381768adbf183d1e3cb13bbdfba5b4577ebcf \
+                    size    96023645 \
                     ${go_amdbin_dist} \
-                    rmd160  d65ca3fbba38b938674d0993384884c700f9c3e0 \
-                    sha256  013d6d427a9591711d6e05defc46c4086e2fb9dffbc41c9a0fce09192e6e8ede \
-                    size    143162528
+                    rmd160  37abdf1e4fe1482776cd5ea4eb4e6b08611c8d54 \
+                    sha256  bd7f6b14655d83126b85331b1c99032b4417982377ff1ee4cb0b4fa955935e52 \
+                    size    100494634
+
+    livecheck.regex {go([0-9.A-z]+)\.src\.tar\.gz}
 } else {
     # Go (RELEASE)
-    checksums       ${go_src_dist} \
-                    rmd160  8384bf0e133ebff52c9dcd4f3568963769f4c3ff \
-                    sha256  4dc1bbf3ff61f0c1ff2b19355e6d88151a70126268a47c761477686ef94748c8 \
-                    size    22191372 \
+
+    if {${unsupported_macos}} {
+        # 1.17
+        checksums   ${go_src_dist} \
+                    rmd160  6d8a13da5112ee67bb886eca0fec77ffaab27a5f \
+                    sha256  a1a48b23afb206f95e7bbaa9b898d965f90826f6f1d1fc0c1d784ada0cd300fd \
+                    size    22206518 \
                     ${go_armbin_dist} \
-                    rmd160  721116b37981f63bc5b00b5f206663e9a2e0e0bf \
-                    sha256  dc54f3f4099e2be9e9c33bf926a7dc3ad64f34717142f7abcaff9ae44bc03d0c \
-                    size    130265710 \
+                    rmd160  1e2b1b394f912d92c3afde177f657733692ff593 \
+                    sha256  e4ccc9c082d91eaa0b866078b591fc97d24b91495f12deb3dd2d8eda4e55a6ea \
+                    size    130528194 \
                     ${go_amdbin_dist} \
-                    rmd160  68e660cf7aac327b96f515fe801d3c150a542bec \
-                    sha256  874bc6f95e07697380069a394a21e05576a18d60f4ba178646e1ebed8f8b1f89 \
-                    size    136792188
+                    rmd160  5ff00c1089ca3143c2f8e489f82c659f1066a17a \
+                    sha256  c101beaa232e0f448fab692dc036cd6b4677091ff89c4889cc8754b1b29c6608 \
+                    size    137060546
+
+        notes-append "
+            Please note: Go 1.18 does not build on macOS 10.12 and older, so Go ${version} has been installed.
+        "
+    } else {
+        # 1.19
+        checksums   ${go_src_dist} \
+                    rmd160  5dbace8e8ffff38bdb65b1faf180a9319a52709f \
+                    sha256  eda74db4ac494800a3e66ee784e495bfbb9b8e535df924a8b01b1a8028b7f368 \
+                    size    26542047 \
+                    ${go_armbin_dist} \
+                    rmd160  9ace4693e1d668c95b91999f607812757c781509 \
+                    sha256  bb3bc5d7655b9637cfe2b5e90055dee93b0ead50e2ffd091df320d1af1ca853f \
+                    size    146436948 \
+                    ${go_amdbin_dist} \
+                    rmd160  03ff78148435db10ac4294588c356a9586169e71 \
+                    sha256  44894862d996eec96ef2a39878e4e1fce4d05423fc18bdc1cbba745ebfa41253 \
+                    size    152193108
+    }
+
+    livecheck.regex {go([0-9.]+)\.src\.tar\.gz}
 }
 
 master_sites        https://storage.googleapis.com/golang/
@@ -141,7 +189,7 @@ if {${os.platform} eq "darwin" && ${os.major} <= ${legacysupport.newest_darwin_r
                         "CGO_LDFLAGS=-g -O2 ${configure.ldflags}"
 
     # Might be useful while debugging issues.
-    #build.args          "-v=3"
+    build.args-append   "-v=3"
 
     notes-append [subst {
                     go had to be specially patched and built to work on your platform.
@@ -185,7 +233,7 @@ if {${configure.build_arch} eq "arm64"} {
             "${extract.cmd} ${extract.pre_args} ${distpath}/${go_armbin_dist} ${extract.post_args}"
     }
 
-} elseif {${configure.build_arch} eq "x86_64" && ${os.major} >= 21} {
+} elseif {(${configure.build_arch} eq "x86_64" && ${os.major} >= 21) || !${legacy_build}} {
 
     # Use a temporary installation of the binary AMD64 Go distribution to
     # build Go for AMD64 on macOS 12 since go-1.4 fails to build
@@ -244,12 +292,11 @@ destroot {
     }
 
     xinstall -m 0644 -W ${worksrcpath} \
-        AUTHORS \
         CONTRIBUTING.md \
-        CONTRIBUTORS \
         LICENSE \
         README.md \
         PATENTS \
+        SECURITY.md \
         VERSION \
         ${docdir}
 
@@ -259,11 +306,7 @@ destroot {
 if {${os.platform} eq "darwin" && ${os.major} < 10} {
     known_fail yes
     pre-fetch {
-        ui_error "${subport} @${version} requires OS X 10.6 or greater."
+        ui_error "${subport} @${version} requires Mac OS X 10.6 or greater."
         return -code error "incompatible Mac OS X version"
     }
 }
-
-livecheck.type      regex
-livecheck.url       ${homepage}/dl/
-livecheck.regex     {go([0-9.]+)\.src\.tar\.gz}

@@ -3,13 +3,12 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        dbeaver dbeaver 21.3.2
+github.setup        dbeaver dbeaver 22.3.1
 github.tarball_from releases
 revision            0
 name                dbeaver-community
 
 categories          databases
-platforms           darwin
 supported_archs     x86_64 arm64
 license             Apache-2
 
@@ -29,28 +28,28 @@ long_description    \
 homepage            https://dbeaver.io/
 
 set arch ${build_arch}
-
 if {${build_arch} eq "arm64"} {
     set arch "aarch64"
 }
-# uncomment for update checksums
-# set arch "aarch64"
 
 distname            dbeaver-ce-${version}-macosx.cocoa.${arch}
 
 checksums           dbeaver-ce-${version}-macosx.cocoa.x86_64${extract.suffix} \
-                        rmd160  eeafe8687b493c396c81621976ef5b400c4442c8 \
-                        sha256  c6cbdc59c8a7afb168988e27f0fd9df14ae15b577275c3f724ca98400e780f91 \
-                        size    105542823 \
+                        rmd160  39aaba8b1e9c28f73bd50c4ead2858950e9285b1 \
+                        sha256  fa326a44bd369e7d2174acef3799234af5b9bf4b839d47ba62aa67f8790e442c \
+                        size    114770797 \
                     dbeaver-ce-${version}-macosx.cocoa.aarch64${extract.suffix} \
-                        rmd160  c5f805e46ec2fe1f07639417a76f239683699df9 \
-                        sha256  29173441b2fdadca5e23fe1e5aada9b3046ceff46fd30f39bd87a92ad80792c8 \
-                        size    106219527
+                        rmd160  d769807674fa5b1c791ead1f6ec672667c715489 \
+                        sha256  551ff11e74c9a3644a393a9df74ad459eff1bc33b77ea0d6e1315bf1168f9278 \
+                        size    115473915
 
 extract.mkdir       yes
 use_configure       no
 
-depends_run         port:openjdk17
+depends_run         port:openjdk17-temurin
+variant jdk17 description {Use Oracle Java 17} {
+    depends_run-replace port:openjdk17-temurin port:jdk17
+}
 
 # Since the user in any case needs to have OpenJDK to run this port, it is
 # better to install OpenJDK from MacPorts, with which there is no issue like
@@ -58,8 +57,13 @@ depends_run         port:openjdk17
 patchfiles          patch-java-path.diff
 
 post-patch {
-    reinplace "s|@@JAVA_VERSION@@|openjdk17-temurin|g" \
-        ${worksrcpath}/DBeaver.app/Contents/Info.plist
+    if {[variant_isset jdk17]} {
+        reinplace "s|@@JAVA_VERSION@@|jdk17|g" \
+            ${worksrcpath}/DBeaver.app/Contents/Info.plist
+    } else {
+        reinplace "s|@@JAVA_VERSION@@|openjdk17-temurin|g" \
+            ${worksrcpath}/DBeaver.app/Contents/Info.plist
+    }
 }
 
 build {}

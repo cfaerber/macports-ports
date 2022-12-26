@@ -5,7 +5,6 @@ PortGroup           select                       1.0
 PortGroup           compiler_blacklist_versions  1.0
 PortGroup           active_variants              1.1
 PortGroup           conflicts_build              1.0
-PortGroup           cltversion                   1.0
 
 epoch               5
 name                gcc-devel
@@ -18,11 +17,15 @@ maintainers         nomaintainer
 # an exception in the license allows dependents to not be GPL
 license             {GPL-3+ Permissive}
 
-description         The GNU compiler collection, prerelease BETA snapshot.
-long_description    The GNU compiler collection, including front ends for \
+description         The GNU compiler collection
+long_description    {*}${description}, including front ends for \
                     C, C++, Objective-C, Objective-C++ and Fortran. \
                     This is an !experimental!, !BETA! version \
                     built from GCC snapshots.
+
+set libgccname      lib${name}
+
+set libcxxname      ${name}-libcxx
 
 if {${os.arch} eq "arm"} {
     # Use lead Darwin developer branch for now
@@ -30,27 +33,27 @@ if {${os.arch} eq "arm"} {
     # Arm machines can use same snapshots as Intel.
     PortGroup       github 1.0
 
-    github.setup    iains gcc-darwin-arm64 def454532abac9b7af411caf8b8e5b041541aee5
+    github.setup    iains gcc-darwin-arm64 7bb7023a9c79bd4e035cdf29a6b650069471467c
 
     # Version must follow same scheme as with GCC snapshots below <version>-<commit-date>
-    version         12-20220101
-    revision        1
-    subport         libgcc-devel { revision 1 }
+    version         12-20221212
+    revision        0
+    subport         ${libgccname} { revision [ expr ${revision} + 0 ] }
 
-    checksums       rmd160  4d99969933d18d83d83230a9d457063f63ab9fc6 \
-                    sha256  5af0924e0bf246c4e1bcbee5a313634a345589c38c6c65490e3144b8aa91b8ed \
-                    size    129376822
+    checksums       rmd160  06a49b8265814a71c40d785478e8e44fd897685e \
+                    sha256  71d3df5501f4e2c421ac23f9a06e3f08524577c4a048e14e4e36972b8f53b222 \
+                    size    132543649
 
 } else {
     # Use regular GCC releases and snapshsots
 
-    version         12-20220102
-    revision        1
-    subport         libgcc-devel { revision 1 }
+    version         13-20221211
+    revision        0
+    subport         ${libgccname} { revision [ expr ${revision} + 0 ] }
 
-    checksums       rmd160  029c235ab8a852d2b0e1c014ad0d442b37d9a39a \
-                    sha256  d2c7e42ab6cb96e40e99a5995d713e093cf20bf7da980f48f6db8c541ed78fa4 \
-                    size    78371156
+    checksums       rmd160  142aed5fff1e88872f2ab6b50105137af251a5c4 \
+                    sha256  9872154ce3d27677445c1d3b825a9cb14bea2de8abe1f6064afe2b5068f0ca1a \
+                    size    80786948
 
     # Primary releases
     master_sites    https://ftpmirror.gnu.org/gcc/gcc-${version}/ \
@@ -85,25 +88,27 @@ depends_lib-append  port:cctools \
                     port:libiconv \
                     port:libmpc \
                     port:mpfr \
-                    port:zlib
+                    port:zlib \
+                    port:zstd
 depends_run-append  port:gcc_select \
                     port:libgcc-devel
 
 depends_skip_archcheck-append gcc_select ld64 cctools
 license_noconflict  gmp mpfr ppl libmpc zlib
 
-set major           [lindex [split ${version} .-] 0]
+# For release
+#set major           [lindex [split ${version} .-] 0]
+# For devel builds
+set major           devel
 
 platform darwin {
-    if { ${build_arch} eq "arm64" } {
-        configure.pre_args-append --build=aarch64-apple-darwin${os.major}
-    } else {
-        configure.pre_args-append --build=${build_arch}-apple-darwin${os.major}
-    }
+    configure.pre_args-append --build=${build_arch}-apple-darwin${os.major}
 }
 
 set gcc_configure_langs {c c++ objc obj-c++ lto fortran}
-if {${subport} eq ${name}} {
+if {${subport} eq ${name} && ${build_arch} ne "i386"} {
+    # jit compiler is not building on i386 systems
+    # https://trac.macports.org/ticket/61130
     lappend gcc_configure_langs jit
 }
 
@@ -113,6 +118,8 @@ proc get_clean_sysroot {} {
     return [regsub {MacOSX1[1-9]\.[0-9]+\.sdk} ${configure.sdkroot} {MacOSX.sdk}]
 }
 
+set mp_extra_rpath  ${prefix}/lib/libgcc
+
 configure.dir       ${workpath}/build
 configure.cmd       ${worksrcpath}/configure
 configure.args      --enable-languages=[join ${gcc_configure_langs} ","] \
@@ -120,17 +127,18 @@ configure.args      --enable-languages=[join ${gcc_configure_langs} ","] \
                     --includedir=${prefix}/include/${name} \
                     --infodir=${prefix}/share/info \
                     --mandir=${prefix}/share/man \
-                    --datarootdir=${prefix}/share/gcc-devel \
+                    --datarootdir=${prefix}/share/gcc-${major} \
                     --with-local-prefix=${prefix} \
                     --with-system-zlib \
                     --disable-nls \
-                    --program-suffix=-mp-devel \
+                    --program-suffix=-mp-${major} \
                     --with-gxx-include-dir=${prefix}/include/${name}/c++/ \
                     --with-gmp=${prefix} \
                     --with-mpfr=${prefix} \
                     --with-mpc=${prefix} \
                     --with-isl=${prefix} \
-                    --enable-stage1-checking \
+                    --with-zstd=${prefix} \
+                    --enable-checking=release \
                     --disable-multilib \
                     --enable-lto \
                     --enable-libstdcxx-time \
@@ -139,26 +147,29 @@ configure.args      --enable-languages=[join ${gcc_configure_langs} ","] \
                     --with-ld=${prefix}/bin/ld \
                     --with-ar=${prefix}/bin/ar \
                     --with-bugurl=https://trac.macports.org/newticket \
-                    --enable-host-shared
+                    --enable-host-shared \
+                    --with-darwin-extra-rpath=${mp_extra_rpath} \
+                    --with-libiconv-prefix=${prefix}
 
-if { ${os.major} < 15 } {
-    # see https://lists.macports.org/pipermail/macports-dev/2017-August/036209.html
-    # --disable-tls does not limit functionality
-    # it only determines how std::call_once works
-    configure.args-append  --disable-tls
-}
+# see https://lists.macports.org/pipermail/macports-dev/2017-August/036209.html
+# --disable-tls does not limit functionality
+# it only determines how std::call_once works
+configure.args-append  --disable-tls
 
 # Disable ccache
 configure.ccache    no
 
-if { ${os.platform} eq "darwin" } {
+if { ${subport} ne ${libcxxname} && ${os.platform} eq "darwin" } {
     # gcc has build issues on macOS 11.3 with the use of Xcode 12.5 clang via cctools for ld
     # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100340
     # https://trac.macports.org/ticket/62775
-    if { ([vercmp ${xcodeversion} 12.5] >= 0 && [vercmp ${xcodeversion} 13] < 0) || \
-         ([vercmp ${cltversion} 12.5] >= 0 && [vercmp ${cltversion} 13] < 0) } \
+    # Extend skipping comparison to Darwin 14 and older.
+    if { ([vercmp ${xcodeversion} >= 12.5] && [vercmp ${xcodeversion} < 13]) || \
+         ([vercmp ${xcodecltversion} >= 12.5] && [vercmp ${xcodecltversion} < 13]) || \
+         ${os.major} < 15 } \
     {
         # Skip bootstrap comparison entirely
+        configure.args-replace --with-build-config=bootstrap-debug --without-build-config
         post-patch {
             reinplace {s|^do-compare =|do-compare = /usr/bin/true|g} \
                 ${worksrcpath}/Makefile.in \
@@ -198,20 +209,75 @@ pre-configure {
         configure.args-append --with-sysroot="[get_clean_sysroot]"
     }
 
-    # Enables support for specifying the c++ runtime via `-stdlib=` in a similar
-    # way to clang. For more details see the later comments in
-    #   https://www.mail-archive.com/gcc-patches@gcc.gnu.org/msg257385.html
-    configure.args-append --with-gxx-libcxx-include-dir="[get_clean_sysroot]/usr/include/c++/v1"
-    # Note : The above 'bakes' the libc++ include directory for the build SDK into
-    # gcc, which is then used as the default search location when `-stdlib=libc++`
-    # is given. As it is possible that this path is not the same as the SDK/CLT the
-    # user of GCC wishes to use, it is probably better to not rely on this and specify
-    # the required path using `-isystem /path/to/SDK/usr/include/c++/v1` at build time.
-    # This can be done dynamically with xcrun e.g.
-    #  > g++-mp-devel -isystem `xcrun --show-sdk-path`/usr/include/c++/v1 -stdlib=libc++ ./test.cpp
-    # It would be nice if GCC internalled used the $SDKROOT environment variable, to do
-    # this automatically, as it does for other parts of the SDK, but this is currently at least
-    # not the case.
+}
+
+set libcxx_incpath ${prefix}/libexec/${name}/libc++/include/c++/v1
+
+subport ${libcxxname} {
+    PortGroup compilers     1.0
+    compilers.choose        cxx
+    compilers.setup         -gcc -fortran -clangdevel -clang34 -clang35 -clang36 \
+                            -clang37 -clang50 -clang60 -clang70 -clang80 -clang90
+    if { ![clang_variant_isset] } {
+        if { ${os.platform} eq "darwin" && ${os.major} < 11 } {
+            default_variants-append +clang11
+        } else {
+            default_variants-append +clang14
+        }
+    }
+    revision                [ expr ${revision} + 1 ]
+    description             libc++ header implementation to be used by ${name}
+    long_description        {*}${description}
+    homepage                https://llvm.org/
+    license                 NCSA
+    depends_build
+    depends_extract
+    depends_run
+    depends_lib
+    distfiles
+    patchfiles
+    use_configure           no
+    supported_archs         noarch
+    # Find clang/llvm version to use from active variant
+    proc getClangVersion {} {
+        if { [regexp {clang(.*)} [clang_variant_name] -> clang_v] } {
+            return ${clang_v}
+        }
+        return ""
+    }
+    set mp_clang_ver [getClangVersion]
+    build {
+        # Copy headers from clang-N during build
+        file mkdir ${worksrcpath}/headers
+        file copy ${prefix}/libexec/llvm-${mp_clang_ver}/include/c++/v1 ${worksrcpath}/headers/
+    }
+    destroot {
+        set base_dir [file dirname ${libcxx_incpath}]
+        file mkdir ${destroot}${base_dir}
+        file copy ${worksrcpath}/headers/v1 ${destroot}${base_dir}
+    }
+}
+
+if { ${subport} ne ${libcxxname} } {
+
+    variant stdlib_flag description {Enable stdlib command line flag to select c++ runtime} {
+        # Enables support for specifying the c++ runtime via `-stdlib=` in a similar
+        # way to clang. For more details see the later comments in
+        #   https://www.mail-archive.com/gcc-patches@gcc.gnu.org/msg257385.html
+        # Note : This 'bakes' the libc++ include directory into gcc,
+        # which is then used as the default search location when `-stdlib=libc++`
+        # is given. Therefore to have consistency across various OS versions, and to enable
+        # modern c++ standards, use a recent macports clang port to provide this.
+        if {${subport} eq ${name}} {
+            depends_run-append port:${libcxxname}
+        }
+        configure.args-append --with-gxx-libcxx-include-dir="${libcxx_incpath}"
+    }
+
+    # libcxx is unavailable on PPC
+    if {${build_arch} ni [list ppc ppc64]} {
+        default_variants-append +stdlib_flag
+    }
 
 }
 
@@ -223,7 +289,7 @@ compiler.blacklist-append {clang < 800} gcc-4.0 *gcc-4.2 {llvm-gcc-4.2 < 2336.1}
 
 # https://build.macports.org/builders/ports-10.13_x86_64-builder/builds/105513/steps/install-port/logs/stdio
 # c++/v1/functional:1408:2: error: no member named 'fancy_abort' in namespace 'std::__1'; did you mean simply 'fancy_abort'?
-compiler.blacklist-append {clang < 1000}
+compiler.blacklist-append {clang < 1001}
 
 # "-stdlib" would be passed on to the bootstrap compiler if present
 configure.cxx_stdlib
@@ -234,7 +300,7 @@ build.target        bootstrap-lean
 destroot.target     install install-info-host
 
 # Is this gcc release supported here.
-if { ${os.major} < 11 } {
+if { ${os.platform} eq "darwin" && ${os.major} < 10 } {
     known_fail      yes
     pre-fetch {
         ui_error "${name} ${version} is not supported on Darwin ${os.major}"
@@ -249,15 +315,21 @@ conflicts_build-append libunwind-headers
 # Note that we really don't want to include libgcc_ext.10.[45].dylib here, but install_name_tool
 # doesn't know how to change the id of stubs, and it's easier than recreating them for each
 # gcc port.
-set dylibs {libgcc_ext.10.4.dylib libgcc_ext.10.5.dylib libgcc_s.1.dylib libgcc_s.1.1.dylib libgcc_s.2.dylib libgfortran.5.dylib libquadmath.0.dylib libstdc++.6.dylib libobjc-gnu.4.dylib libgomp.1.dylib libitm.1.dylib libssp.0.dylib libasan.6.dylib libubsan.1.dylib libatomic.1.dylib}
+set dylibs {libgcc_ext.10.4.dylib libgcc_ext.10.5.dylib libgcc_s.1.dylib libgcc_s.1.1.dylib \
+                libgcc_s.2.dylib libgfortran.5.dylib libquadmath.0.dylib libstdc++.6.dylib \
+                libobjc-gnu.4.dylib libgomp.1.dylib libitm.1.dylib libssp.0.dylib libasan.6.dylib \
+                libubsan.1.dylib libatomic.1.dylib libgcc_ehs.1.1.dylib}
 
-if {${subport} ne ${name}} {
+# Moving libgccjit.0.dylib to libgcc failed for some reason
+# https://github.com/macports/macports-ports/commit/ce950c5729c9178cd6c61f9f4096888a026bb87f#commitcomment-78932371
+
+if {${subport} eq ${libgccname}} {
 
     # Set conflict against port providing primary runtime
     if { ${os.major} < 10 } {
         conflicts libgcc libgcc7
     } else {
-        conflicts libgcc libgcc10
+        conflicts libgcc libgcc12
     }
 
     # http://trac.macports.org/ticket/35770
@@ -273,9 +345,9 @@ if {${subport} ne ${name}} {
     # versions.
 
     depends_run
-    depends_lib-delete   port:zlib
+    depends_lib-delete   port:zlib port:libiconv
     depends_build-append {*}${depends_lib}
-    depends_lib          port:zlib
+    depends_lib          port:zlib port:libiconv
 
     configure.args-replace \
         --libdir=${prefix}/lib/${name} \
@@ -314,7 +386,17 @@ if {${subport} ne ${name}} {
                 continue
             }
 
+            # Move dylib to it to temp area
             move ${destroot}${prefix}/lib/libgcc/${dylib} ${destroot}${prefix}/lib/libgcc.merged
+
+            # If needed create versionless sym link to dylib
+            set dylib_split [split ${dylib} "."]
+            set dylib_nover ${destroot}${prefix}/lib/libgcc.merged/[lindex ${dylib_split} 0].[lindex ${dylib_split} end]
+            if { ![file exists ${dylib_nover}]  } {
+                ln -s ${dylib} ${dylib_nover}
+            }
+
+            # Universal support
             if {[variant_exists universal] && [variant_isset universal]} {
                 foreach archdir [glob ${destroot}${prefix}/lib/libgcc/*/] {
                     set archdir_nodestroot [string map "${destroot}/ /" ${archdir}]
@@ -352,7 +434,9 @@ if {${subport} ne ${name}} {
 
     }
 
-} else {
+}
+
+if {${subport} eq ${name}} {
 
     post-destroot {
 
@@ -360,7 +444,7 @@ if {${subport} ne ${name}} {
 
         foreach file [glob ${destroot}${prefix}/share/{info,man/man7}/*] {
             set extension [file extension ${file}]
-            set newfile [regsub "${extension}$" ${file} "-mp-devel${extension}"]
+            set newfile [regsub "${extension}$" ${file} "-mp-${major}${extension}"]
             file rename ${file} ${newfile}
         }
 
@@ -390,33 +474,60 @@ if {${subport} ne ${name}} {
 
 }
 
-platform powerpc {
-    configure.universal_archs ppc ppc64
+if { ${subport} ne ${libcxxname} } {
+
+    post-destroot {
+        # Ensure all dylibs in destroot have our extra rpath added ..
+        # https://trac.macports.org/ticket/65503
+        foreach dlib [ exec find ${destroot}${prefix} -type f -and -name "*.dylib" ] {
+            ui_debug "Ensuring DYLIB '${dlib}' has RPATH '${mp_extra_rpath}'"
+            # Note install_name_tool returns a failure if the dylib already has the entry
+            # We don't want that here so force final status to be true...
+            system "install_name_tool -add_rpath ${mp_extra_rpath} ${dlib} > /dev/null 2>&1 ; true"
+        }
+    }
+
+    platform powerpc {
+        configure.universal_archs ppc ppc64
+    }
+    if { ${os.platform} eq "darwin" && ${os.major} >= 20 } {
+        platform i386 {
+            configure.universal_archs x86_64 arm64
+        }
+        platform arm {
+            configure.universal_archs x86_64 arm64
+        }
+    } else {
+        platform i386 {
+            configure.universal_archs i386 x86_64
+        }
+    }
+    variant universal {
+        configure.args-delete --disable-multilib
+    }
+    # the generated compiler doesn't accept -arch
+    configure.env-append \
+        "CPP=${configure.cc} -E" \
+        "CPP_FOR_BUILD=${configure.cc} -E" \
+        "CXXCPP=${configure.cxx} -E"
+    build.env-append \
+        "CPP=${configure.cc} -E" \
+        "CPP_FOR_BUILD=${configure.cc} -E" \
+        "CXXCPP=${configure.cxx} -E"
+    configure.cc-append [get_canonical_archflags]
+    configure.cc_archflags
+    configure.cxx-append ${configure.cxx_archflags}
+    configure.cxx_archflags
+    configure.objc_archflags
+    configure.ld_archflags
+    configure.universal_cflags
+    configure.universal_cxxflags
+    configure.universal_ldflags
+    configure.universal_args
+
 }
-platform i386 {
-    configure.universal_archs i386 x86_64
-}
-variant universal {
-    configure.args-delete --disable-multilib
-}
-# the generated compiler doesn't accept -arch
-configure.env-append \
-    "CPP=${configure.cc} -E" \
-    "CXXCPP=${configure.cxx} -E"
-build.env-append \
-    "CPP=${configure.cc} -E" \
-    "CXXCPP=${configure.cxx} -E"
-configure.cc-append [get_canonical_archflags]
-configure.cc_archflags
-configure.cxx-append ${configure.cxx_archflags}
-configure.cxx_archflags
-configure.objc_archflags
-configure.ld_archflags
-configure.universal_cflags
-configure.universal_cxxflags
-configure.universal_ldflags
-configure.universal_args
 
 livecheck.type      regex
 livecheck.url       ftp://gcc.gnu.org/pub/gcc/snapshots/
-livecheck.regex     LATEST-${major} -> (${major}-\[0-9\]+)
+set                 maj [lindex [split ${version} .-] 0]
+livecheck.regex     LATEST-${maj} -> (${maj}-\[0-9\]+)

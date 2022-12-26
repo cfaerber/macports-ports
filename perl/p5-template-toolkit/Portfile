@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           perl5 1.0
 
 perl5.branches      5.28 5.30 5.32 5.34
-perl5.setup         Template-Toolkit 3.010 ../../authors/id/A/AT/ATOOMIC
+perl5.setup         Template-Toolkit 3.101 ../../authors/id/A/AB/ABW
 
 license             {Artistic-1 GPL}
 maintainers         nomaintainer
@@ -21,13 +21,12 @@ long_description    The Template Toolkit is a collection of modules \
                     kind of text based documents: HTML, XML, POD, \
                     PostScript, LaTeX, and so on.
 
-checksums           rmd160  a848f705aec8d0fa1db2dc7f045ea58a16aa3f1f \
-                    sha256  f4b65e93364088aa850887820652e467b0bce1493760fd3690268520b37d82cc \
-                    size    522731
+checksums           rmd160  c4eee61eae6c54575e47b595c189d6562fe03b96 \
+                    sha256  d2a32dd6c21e4b37c6a93df8087ca9e880cfae613a3e5efaea307b0bdcaedb58 \
+                    size    515947
 
 if {${perl5.major} != ""} {
     depends_build-append \
-                    port:p${perl5.major}-cgi \
                     port:p${perl5.major}-test-leaktrace
 
     depends_lib-append \
@@ -40,7 +39,7 @@ if {${perl5.major} != ""} {
 
     post-destroot {
         xinstall -m 755 -d ${destroot}${prefix}/share/doc/${subport}
-        xinstall -m 644 -W ${worksrcpath} INSTALL README.md \
+        xinstall -m 644 -W ${worksrcpath} README.md TODO \
             ${destroot}${prefix}/share/doc/${subport}
     }
 }

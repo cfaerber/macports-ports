@@ -4,17 +4,17 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                buildbot
-version             3.4.0
+version             3.7.0
 revision            0
-checksums           rmd160  1f40e4c422d739e11cec504af9a6a1c47287c217 \
-                    sha256  d78c35b05d5a3a97d45bbeae840214a5dae300485090459c44683d3ac73ea859 \
-                    size    2446868
+checksums           rmd160  d55adc8d0d8cfa1421560901283675dc361156dd \
+                    sha256  60c2d3d523fa35e9c9214553bebe7c195aed3571f0f9b85f80ca59bb7adebc6e \
+                    size    2459736
 
 categories          devel
-platforms           darwin
 maintainers         {ryandesign @ryandesign} {rajdeep @rajdeepbh} {mojca @mojca} openmaintainer
 license             GPL-2
 supported_archs     noarch
+conflicts           buildbot-0.8
 
 description         buildmaster for Buildbot continuous integration system
 
@@ -26,7 +26,7 @@ long_description    Buildbot is a system to automate the compile/test \
 homepage            https://buildbot.net
 
 python.default_version \
-                    39
+                    310
 
 if {${subport} eq ${name}} {
 

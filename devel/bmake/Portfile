@@ -3,14 +3,13 @@
 PortSystem          1.0
 
 name                bmake
-version             20211221
+version             20220928
 revision            0
-checksums           rmd160  c82e7d99b584a724d08243e43ce6f5380b7ac4a0 \
-                    sha256  c48476c1c52493e61a5342d7d8541608f7852244f3c74ffd7676b6537c475bfb \
-                    size    782416
+checksums           rmd160  397ef7e7a37fbe3c479ae4be60a960a9ec163b02 \
+                    sha256  c804b77de3feb8e31dee2a4c9fb1e9ec24c5a34764e7a2815c88b4ed01650e90 \
+                    size    821224
 
 categories          devel
-platforms           darwin
 maintainers         {ryandesign @ryandesign} openmaintainer
 license             BSD
 
@@ -25,6 +24,8 @@ worksrcdir          ${name}
 configure.cmd       ./boot-strap
 configure.args-append \
                     op=configure
+
+configure.checks.implicit_function_declaration.whitelist-append strchr
 
 build.cmd           ./boot-strap
 build.target        op=build

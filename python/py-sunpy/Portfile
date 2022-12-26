@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-sunpy
-version             3.1.3
+version             4.1.0
 revision            0
 categories          python
 license             BSD
@@ -12,14 +12,13 @@ maintainers         {mps @Schamschula} openmaintainer
 description         SunPy is an open-source Python library for Solar Physics data \
                     analysis and visualization.
 long_description    {*}${description}
-platforms           darwin
 homepage            https://sunpy.org
 
 python.versions     37 38 39 310
 
-checksums           rmd160  5df566aca6dc7627e2aca444b607a44c1b95e505 \
-                    sha256  4acb05a05c7e6a2090cd0bb426b34c7e1620be0de2bf90a95a3f48ba15a5fce2 \
-                    size    7383954
+checksums           rmd160  3a747c56015883fe3a66a1f1165fb3c2e27bb60c \
+                    sha256  0c059ce46e584f27711c8b99918ecd6f77ae7a33e7d1a432ec3d35c428450de3 \
+                    size    5003974
 
 if {${name} ne ${subport}} {
     depends_build-append \
@@ -86,6 +85,4 @@ if {${name} ne ${subport}} {
     }
 
     default_variants +database +image +map +net +timeseries +visualization
-
-    livecheck.type  none
 }

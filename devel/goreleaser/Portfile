@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/goreleaser/goreleaser 1.2.5 v
+go.setup            github.com/goreleaser/goreleaser 1.13.1 v
 github.tarball_from archive
 revision            0
 
@@ -20,9 +20,9 @@ license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} \
                     openmaintainer
 
-checksums           rmd160  bf2c40804fa91ef5b235058097533af43eb225bf \
-                    sha256  f6ad356f4b53a3e4742bb429c636b974f04aab8d5d12f5fc6919526c83665d1a \
-                    size    649871
+checksums           rmd160  aa61317b96a214c6151e0a595d7277be69562283 \
+                    sha256  ed1842532644cb51d666f1a05455e11870f10f63789e65472ac9b0cc5f0d616d \
+                    size    769796
 
 set build_script    ${worksrcpath}/_build.sh
 

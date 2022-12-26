@@ -4,13 +4,12 @@ PortSystem          1.0
 PortGroup           cmake 1.1
 
 name                swi-prolog-devel
-conflicts           swi-prolog swi-prolog-lite
+conflicts           swi-prolog
 epoch               20051223
-version             8.5.3
+version             9.1.2
 revision            0
 
 categories          lang
-platforms           darwin
 universal_variant   no
 license             BSD
 maintainers         {cwi.nl:J.Wielemaker @JanWielemaker} openmaintainer
@@ -32,14 +31,14 @@ master_sites        https://www.swi-prolog.org/download/devel/src/
 distname            swipl-${version}
 dist_subdir         swi-prolog
 
-checksums           rmd160  332976f21705a287a3599eb28bcc1984cfcc641e \
-                    sha256  49ff9f3644c0d9f51d39bd4bb4e81bfc03ab48084fb98cbe4737f02a202e7d9b \
-                    size    11396211
+checksums           rmd160  2ad5e655ca6862510a7b7a08a76f64ea60113b02 \
+                    sha256  3712f85a6b48531d40f0fa402f40bf99fdfab5e4e303083c4a2cece8629b74b0 \
+                    size    11827220
 
 depends_build-append \
                     port:pkgconfig
 
-depends_lib-append  port:db53 \
+depends_lib-append  port:db62 \
                     port:gmp \
                     port:gperftools \
                     path:include/turbojpeg.h:libjpeg-turbo \
@@ -47,7 +46,7 @@ depends_lib-append  port:db53 \
                     port:libmcrypt \
                     port:ncurses \
                     port:ossp-uuid \
-                    port:pcre \
+                    port:pcre2 \
                     port:readline \
                     port:Xft2 \
                     port:xorg-libXinerama \

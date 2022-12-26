@@ -52,14 +52,6 @@ default cargo.crates_github {}
 compiler.cxx_standard       2017
 compiler.blacklist-append   {macports-clang-[4-9].0}
 
-# please remove when 8a088c3 has been in a released MacPorts version for at least two weeks
-# see https://github.com/macports/macports-base/commit/8a088c30d80c7c3eca10848f28835e1c180229b1
-if {"shellescape" ni [info commands shellescape]} {
-    proc shellescape {arg} {
-        return [regsub -all -- {[^A-Za-z0-9.:@%/+=_-]} $arg {\\&}]
-    }
-}
-
 option_proc cargo.crates handle_cargo_crates
 proc handle_cargo_crates {option action {value ""}} {
     if {${action} eq "set"} {
@@ -120,7 +112,7 @@ proc cargo._write_cargo_checksum {cdirname chksum} {
 
 proc cargo._old_macos_compatibility {cname cversion} {
     global os.platform os.major cargo.home
-    if {${os.platform} ne "darwin" && ${os.major} >= 12} {
+    if {${os.platform} ne "darwin" || ${os.major} >= 12} {
         return
     }
 
@@ -310,15 +302,15 @@ proc cargo.environments {} {
     global merger_configure_env merger_build_env merger_destroot_env worksrcpath
 
     set cargo_ld ${configure.cc}
-    if { ${os.major} <= [option legacysupport.newest_darwin_requires_legacy] } {
-        # Use wrapped rust compilers
-        depends_build-append port:rust-compiler-wrap
-        configure.cc      ${prefix}/libexec/rust-compiler-wrap/bin/clang
-        configure.cxx     ${prefix}/libexec/rust-compiler-wrap/bin/clang++
-        configure.objc    ${prefix}/libexec/rust-compiler-wrap/bin/clang
-        configure.objcxx  ${prefix}/libexec/rust-compiler-wrap/bin/clang++
-        set cargo_ld      ${prefix}/libexec/rust-compiler-wrap/bin/ld-rust
-    }
+#    if { ${os.major} <= [option legacysupport.newest_darwin_requires_legacy] } {
+#        # Use wrapped rust compilers
+#        depends_build-append port:rust-compiler-wrap
+#        configure.cc      ${prefix}/libexec/rust-compiler-wrap/bin/clang
+#        configure.cxx     ${prefix}/libexec/rust-compiler-wrap/bin/clang++
+#        configure.objc    ${prefix}/libexec/rust-compiler-wrap/bin/clang
+#        configure.objcxx  ${prefix}/libexec/rust-compiler-wrap/bin/clang++
+#        set cargo_ld      ${prefix}/libexec/rust-compiler-wrap/bin/ld-rust
+#    }
 
     cargo.append_envs     CC=${configure.cc}   {build destroot}
     cargo.append_envs     CXX=${configure.cxx} {build destroot}

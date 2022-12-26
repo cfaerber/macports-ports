@@ -15,11 +15,11 @@ description         Experimental Neural Net speech coding for FreeDV
 long_description    Experimental version of LPCNet being developed \
     for over the air Digital Voice experiments with FreeDV.
 
-github.setup        drowe67 LPCNet 44e14bf85b1537b006492981b1dd2d211427ac04
-version             20211230-[string range ${github.version} 0 7]
-checksums           rmd160  0dcedd51119bb520288ccbf7cf49615be7c2abc8 \
-                    sha256  089541947f99679023096f448563455e4da29ef87e9e2f1fa632a4faeaccc587 \
-                    size    33016953
+github.setup        drowe67 LPCNet 59f75b6fc88640502a3aef5a3b2cea6206bf87d9
+version             20221125-[string range ${github.version} 0 7]
+checksums           rmd160  01e112d0c32d13bd71ccb860b09830e2f8686f68 \
+                    sha256  48072e51d31ee24e85e4f390d947f026aecd5b37c25908881c695963928b168a \
+                    size    5227716
 revision            0
 epoch               1
 
@@ -30,9 +30,6 @@ depends_lib-append \
 configure.args-append \
     -DDISABLE_CPU_OPTIMIZATION=ON
 
-if {![info exists universal_possible]} {
-    set universal_possible [expr {${os.universal_supported} && [llength ${configure.universal_archs}] >= 2}]
-}
 # enable optimization on all supported hardwares
 if {${universal_possible} && [variant_isset universal]} {
     set merger_configure_args(x86_64) -DAVX=ON

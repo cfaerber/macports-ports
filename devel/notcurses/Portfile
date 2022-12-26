@@ -5,9 +5,9 @@ PortGroup           cmake 1.1
 PortGroup           github 1.0
 PortGroup           legacysupport 1.1
 
-github.setup        dankamongmen notcurses 3.0.1 v
+github.setup        dankamongmen notcurses 3.0.7 v
 github.tarball_from archive
-revision            0
+revision            1
 
 categories          devel
 platforms           darwin
@@ -27,13 +27,13 @@ master_sites-append https://github.com/dankamongmen/${name}/releases/download/v$
 distfiles-append    ${name}-doc-${version}${extract.suffix}:bootstrap
 
 checksums           ${distname}${extract.suffix} \
-                    rmd160  6074bb7d0559cdf4ce8da92ef6cd0b5e3d7d3e9d \
-                    sha256  32041c300e92fc0fe56c19e65d1d1e374e824c781dfcd4f959ab0dcdbb90cdb2 \
-                    size    10119898 \
+                    rmd160  78c32c968f584f6c23408f3e33534012cca075d2 \
+                    sha256  db461c6ba07a8e3735a51a1d2e706d249ae30436519f543fa5931d414019c770 \
+                    size    10145650 \
                     ${name}-doc-${version}${extract.suffix} \
-                    rmd160  73c5cd260121b378ad9b3644f0f1e378b0a7136c \
-                    sha256  43be760c5f2f4a7b2c9a9527254cd2bbdda8ad7d6f4fc7f841a776f0ee3cdd05 \
-                    size    145503
+                    rmd160  6701964c921bbdb7cf978650354f4092be89e383 \
+                    sha256  51e46198d02f45d302ac7b2ebc9c0f1391cf37f329bd5aa3857c9ccde5f3dac1 \
+                    size    149228
 
 extract.only        ${distname}${extract.suffix}
 

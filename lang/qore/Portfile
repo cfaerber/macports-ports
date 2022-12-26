@@ -2,9 +2,12 @@
 
 PortSystem          1.0
 
-name                qore
-version             1.0.12
-revision            2
+PortGroup           github 1.0
+github.setup        qorelanguage qore 1.12.4 release-
+github.tarball_from releases
+
+PortGroup           cmake 1.1
+
 categories          lang
 license             {LGPL-2.1 MIT}
 maintainers         {davidnichols @davidnich} openmaintainer
@@ -12,18 +15,15 @@ use_bzip2           yes
 description         multi-threaded embeddable scripting language
 long_description    Qore is a scripting language designed for multi-threading and SMP scalability
 homepage            http://qore.org
-platforms           darwin
-master_sites        https://github.com/qorelanguage/qore/releases/download/release-${version}
 
-checksums           rmd160 121023f7122025082c2f3bed14f7ce743ba7c884 \
-                    sha256 607f20d08501d8505eb1ebe7280fa1113fcf338adb00ddb130e1cc5627333aba \
-                    size 43895251
+checksums           rmd160 daf6b7952f6ac98e145bcbf93bd7cb36b98958f4 \
+                    sha256 33d4f33ff614c2c39673ec6c52afc65da3aea0a9145ffc793e4b1c86aed72349 \
+                    size 40570875
 
 compiler.cxx_standard  2011
 
 depends_build-append \
                     port:bison \
-                    path:bin/cmake:cmake \
                     port:flex \
                     port:pkgconfig
 
@@ -35,10 +35,7 @@ depends_lib-append  path:lib/libssl.dylib:openssl \
                     port:mpfr \
                     port:tbb
 
-configure {
-    xinstall -d -m 0755 ${build.dir}
-    system "cd ${build.dir} && cmake ${configure.args} ${worksrcpath}"
-}
+compiler.thread_local_storage yes
 
-configure.args-append      -DCMAKE_BUILD_TYPE=RelWithDebInfo -DSINGLE_COMPILATION_UNIT=1 -DCMAKE_INSTALL_PREFIX=${prefix}
+configure.args-append -DSINGLE_COMPILATION_UNIT=1
 

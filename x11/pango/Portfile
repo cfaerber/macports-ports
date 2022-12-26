@@ -11,11 +11,11 @@ name                    pango
 conflicts               pango-devel
 set my_name             pango
 epoch                   1
-version                 1.50.3
+version                 1.50.7
 revision                0
-checksums               rmd160  b134b26067937fd0fb6f48a5dae6f551730f03a6 \
-                        sha256  4add05edf51c1fb375a1ccde7498914120e23cb280dd7395b1aeb441f1838a4c \
-                        size    4093644
+checksums               rmd160  c9fba0b53d3fb05add38e01e2f19a678ae3a7965 \
+                        sha256  0477f369a3d4c695df7299a6989dc004756a7f4de27eecac405c6790b7e3ad33 \
+                        size    4294752
 
 set branch              [join [lrange [split ${version} .] 0 1] .]
 categories              x11
@@ -23,7 +23,6 @@ maintainers             {ryandesign @ryandesign} {mascguy @mascguy} openmaintain
 license                 LGPL-2+
 homepage                https://www.pango.org/
 master_sites            gnome:sources/${my_name}/${branch}
-platforms               darwin
 distname                ${my_name}-${version}
 dist_subdir             ${my_name}
 use_xz                  yes
@@ -39,7 +38,7 @@ long_description \
 
 depends_build \
     port:pkgconfig \
-    port:gobject-introspection \
+    path:lib/pkgconfig/gobject-introspection-1.0.pc:gobject-introspection \
     port:help2man
 
 depends_lib \

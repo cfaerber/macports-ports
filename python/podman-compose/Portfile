@@ -8,10 +8,11 @@ version             1.0.3
 revision            0
 
 categories-append   devel
-platforms           darwin
 supported_archs     noarch
 license             GPL-2
 maintainers         {judaew @judaew} openmaintainer
+
+conflicts           podman-compose-devel
 
 description         a script to run docker-compose.yml using podman
 long_description    {*}${description}
@@ -21,7 +22,7 @@ checksums           rmd160  dd21ace3714b9baa9113a9a48fded2ab65f1a2c8 \
                     sha256  9c9fe8249136e45257662272ade33760613e2d9ca6153269e1e970400ea14675 \
                     size    21424
 
-python.default_version 39
+python.default_version 310
 
 depends_build-append \
                 port:py${python.version}-setuptools
@@ -30,3 +31,18 @@ depends_run-append \
                 port:podman \
                 port:py${python.version}-python-dotenv \
                 port:py${python.version}-yaml
+
+subport podman-compose-devel {
+    PortGroup           github 1.0
+
+    github.setup        containers podman-compose 08ffcf6126a3ae4016e3d81e963a3629e4b75986
+    name                podman-compose-devel
+    version             2022-11-03
+    revision            0
+
+    conflicts           podman-compose
+
+    checksums           rmd160  37bfd0230519b995623b4a468ad584543a502d71 \
+                        sha256  0693d4ae1cc555f100f720281166de3b4c35387247f70658950f4f54e35cb216 \
+                        size    56403
+}

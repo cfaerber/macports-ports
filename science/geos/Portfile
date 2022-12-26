@@ -8,7 +8,7 @@ PortGroup           compiler_blacklist_versions 1.0
 # changes. If so, all dependents will need to be rev-bumped.
 
 name                geos
-version             3.10.1
+version             3.11.0
 revision            0
 categories          science math gis
 platforms           darwin
@@ -28,9 +28,9 @@ master_sites        http://download.osgeo.org/geos/
 
 use_bzip2           yes
 
-checksums           rmd160  34af70555c5c2d398fa46a7ea4293323aa13d3f1 \
-                    sha256  a8148eec9636814c8ab0f8f5266ce6f9b914ed65b0d083fc43bb0bbb01f83648 \
-                    size    6714713
+checksums           rmd160  85c3be4a99b930a14c5ec67e85922f0c66412dde \
+                    sha256  79ab8cabf4aa8604d161557b52e3e4d84575acdc0d08cb09ab3f7aaefa4d858a \
+                    size    6727294
 
 compiler.cxx_standard 2011
 
@@ -44,7 +44,7 @@ use_parallel_build  yes
 post-destroot {
     set docdir ${prefix}/share/doc/${name}
     xinstall -d ${destroot}${docdir}
-    xinstall -m 644 -W ${worksrcpath} AUTHORS COPYING NEWS \
+    xinstall -m 644 -W ${worksrcpath} AUTHORS COPYING NEWS.md \
         ${destroot}${docdir}
 }
 

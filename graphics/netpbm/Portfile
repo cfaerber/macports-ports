@@ -5,28 +5,28 @@ PortGroup               github 1.0
 
 # Download distfiles from GitHub mirror because fetching from svn keeps being
 # problematic.
-github.setup            leahneukirchen netpbm-mirror 6e629f983aa205c3eaa5f339f1c71bb5e7938049
+github.setup            leahneukirchen netpbm-mirror 7983661603923b2e2af43fd4d0c6e6b93f7970a6
 name                    netpbm
-version                 10.97.00
-svn.revision            4222
+version                 11.00.01
+svn.revision            4448
 set source_branch       advanced
 distname                ${source_branch}-r${svn.revision}
 set source_distfile     ${distfiles}
 
-set userguide_commit    1feb4eb4d9783d530653f6e6ac8bc4264732501d
-set userguide_revision  4217
+set userguide_commit    9d72d65003b20163f6a3a551bca9e4674288a5a7
+set userguide_revision  4450
 set userguide_branch    userguide
 set userguide_distname  ${userguide_branch}-r${userguide_revision}
 set userguide_distfile  ${userguide_distname}${extract.suffix}
 
 checksums               ${source_distfile} \
-                        rmd160  c518a30cd1c5340e0f937fbfa3ce262ee6f9e14e \
-                        sha256  bc599598fa65e17518475975de2cffe500d7f2c664a99a390df00de7553f6e84 \
-                        size    2942081 \
+                        rmd160  f65ce684e6732a152a0210cd147afe24d6b81e80 \
+                        sha256  366d35073bacae62de0db853c5cf0e3663daad8368db49fb999cbd69109dd644 \
+                        size    2960502 \
                         ${userguide_distfile} \
-                        rmd160  2233a3af479660e0e203f1cdd0aa9f75cb56166f \
-                        sha256  e90ddc2133cb2705190c26ba648939b3756082e69558862ff9d7ae72d485015a \
-                        size    1808504
+                        rmd160  040e7125ca633069e55b2e44c977c19dc3843340 \
+                        sha256  d172e563578b58152bf3938e0eaab873208325cc7f6c29f105f75bf5cf3fb256 \
+                        size    1814494
 
 categories              graphics
 platforms               darwin freebsd linux
@@ -78,6 +78,7 @@ post-extract {
 
 patchfiles              patch-lib-Makefile.diff \
                         patch-other-pamx-Makefile.diff
+patchfiles-append       library-version.patch
 
 variant universal {}
 
@@ -181,7 +182,7 @@ destroot {
 }
 
 if {${subport} eq ${name}} {
-    revision            0
+    revision            1
     installs_libs       no
 
     # TODO: Don't build libnetpbm again in netpbm subport.
@@ -301,21 +302,20 @@ platform darwin 8 {
         set data [read $fl]
         close $fl
         if {[regexp "build 4061" ${data}]} {
-            ui_msg "On Mac OS X ${macosx_version}, ${name} @${version} does not work with gcc version \"${data}\"."
+            ui_msg "On Mac OS X ${macos_version}, ${name} @${version} does not work with gcc version \"${data}\"."
             return -code error "incompatible gcc version"
         }
     }
 }
 
 patchfiles-append       patch-python.diff
-if {${os.platform} eq "darwin" && ${os.major} < 10} {
-    # the system python is too old to run scripts
-    depends_build-append \
-                        port:python27
-    configure.python    ${prefix}/bin/python2.7
-} else {
-    configure.python    /usr/bin/python
-}
+
+set python_branch       3.10
+set python_version      [string map {. {}} ${python_branch}]
+
+configure.python        ${prefix}/bin/python${python_branch}
+
+depends_build-append    port:python${python_version}
 post-patch {
     reinplace \
         "s|__MACPORTS_PYTHON__|${configure.python}|g" \

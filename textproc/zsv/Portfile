@@ -1,0 +1,78 @@
+# -*- coding:utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           github   1.0
+PortGroup           makefile 1.0
+
+github.setup        liquidaty zsv 0.3.4-alpha v
+github.tarball_from archive
+revision            0
+
+description         \
+    ${name}: world's fastest (simd) CSV parser, with an extensible CLI
+
+
+long_description    \
+    ${name} is a fast CSV parser library and extensible command-line utility. \
+    It achieves high performance using SIMD operations, efficient memory use \
+    and other optimization techniques.
+
+categories          textproc
+installs_libs       no
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  eb23c7178bbb00b3bfd68d1f4b8310b729e08a11 \
+                    sha256  0c87ada1af814d1eb9728640faf89097ae5cd671ef16feea1eab2f10a10b3b94 \
+                    size    7030918
+
+patchfiles-append   patch-app-Makefile-destdir.diff \
+                    patch-src-Makefile-destdir.diff
+
+depends_build-append \
+                    port:realpath
+
+depends_lib-append  port:jq \
+                    port:ncurses
+
+configure.args-append \
+                    --arch=none \
+                    --enable-jq
+
+use_configure       yes
+use_parallel_build  no
+
+if {$subport eq $name} {
+
+    depends_lib-append \
+                    port:libzsv \
+                    port:libutf8proc
+
+    build.pre_args  -C app
+    build.args      build-cli
+
+    destroot.pre_args-append \
+                    -C app
+
+    destroot.args-append \
+                    PREFIX=${destroot}${prefix}
+}
+
+subport libzsv {
+
+    description     \
+        (Library) {*}${description}
+
+    long_description \
+        (Library) {*}${long_description}
+
+    build.pre_args  -C src
+    build.args      lib
+
+    destroot.pre_args-append \
+                    -C src
+
+    destroot.args-append \
+                    PREFIX=${destroot}${prefix}
+}

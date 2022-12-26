@@ -3,10 +3,9 @@
 PortSystem          1.0
 
 name                s6
-version             2.11.0.1
-revision            0
+version             2.11.1.2
+revision            1
 categories          sysutils
-platforms           darwin
 license             ISC
 maintainers         nomaintainer
 description         toolbox for low-level process and service administration
@@ -28,9 +27,9 @@ depends_build       port:execline \
                     port:skalibs
 depends_run         port:execline
 
-checksums           rmd160  134a426b1e14996267982a4d9fdb8a151525e5d3 \
-                    sha256  ad7f204587634eeb20ef8f7a7beb6dd63ba3080a46a3a650448ca7cc0826f90a \
-                    size    227802
+checksums           rmd160  c0b79c0b8251d518faa96b483e2d007eb7ba49de \
+                    sha256  6c1474be3e889dac392cee307abe015cd4be0c85c725c84ea7f184f0e34503a2 \
+                    size    229092
 
 configure.args      --disable-shared \
                     --with-lib=${prefix}/lib/execline \

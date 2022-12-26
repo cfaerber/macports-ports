@@ -3,11 +3,10 @@
 PortSystem          1.0
 
 name                abcMIDI
-version             2021.12.12
+version             2022.12.09
 revision            0
 
 categories          audio
-platforms           darwin
 maintainers         {judaew @judaew} openmaintainer
 license             GPL-2+
 
@@ -18,9 +17,9 @@ long_description    ABC is a text-based music notation language. Abc2midi is a p
 homepage            https://ifdo.ca/~seymour/runabc/top.html
 master_sites        https://ifdo.ca/~seymour/runabc/
 
-checksums           rmd160  dce2065517c91b8e804428dd516c6ac18a66c66f \
-                    sha256  a50cad5fcdfc0e4a0a2df27b1e983bc0f6776e16b2d503d190622176318695e3 \
-                    size    607868
+checksums           rmd160  44917a4c4aa6beab0e59e6b15a6b192938c01d3d \
+                    sha256  51264a2956817a2a198c7ba245e10b3444b2f18ad8d35e8b4b08834049cd10e0 \
+                    size    617080
 
 use_zip             yes
 

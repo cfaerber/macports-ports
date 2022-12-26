@@ -6,7 +6,7 @@ PortGroup           compiler_blacklist_versions 1.0
 set realname        proj
 name                ${realname}8
 version             8.2.1
-revision            0
+revision            1
 categories-append   gis
 platforms           darwin
 license             MIT
@@ -61,6 +61,9 @@ variant native description {Optimize for speed} {
 
 default_variants    +tiff
 
+test.run            yes
+test.target         check-local
+
 livecheck.type      regex
 livecheck.url       ${master_sites}
-livecheck.regex     "${realname}-(\\d+(?:\\.\\d+)*)${extract.suffix}"
+livecheck.regex     "${realname}-(8(?:\\.\\d+)*)${extract.suffix}"

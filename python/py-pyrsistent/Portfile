@@ -4,13 +4,13 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-pyrsistent
-version             0.18.0
+version             0.19.2
 revision            0
 categories-append   devel
 platforms           darwin
 license             MIT
 
-python.versions     27 35 36 37 38 39 310
+python.versions     27 35 36 37 38 39 310 311
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -19,9 +19,9 @@ long_description    {*}${description}
 
 homepage            http://github.com/tobgu/pyrsistent/
 
-checksums           rmd160  3b9ff21728d0ead6ffb836d987e9e5afbf73c452 \
-                    sha256  773c781216f8c2900b42a7b638d5b517bb134ae1acbebe4d1e8f1f41ea60eb4b \
-                    size    104215
+checksums           rmd160  4ee00c2fe3eb090defa755cc74f9d0bdd059b0ac \
+                    sha256  bfa0351be89c9fcbcb8c9879b826f4353be10f58f8a677efab0c017bf7137ec2 \
+                    size    102438
 
 if {${name} ne ${subport}} {
     depends_build-append \

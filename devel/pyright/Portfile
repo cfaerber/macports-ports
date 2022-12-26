@@ -1,0 +1,23 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           npm 1.0
+
+name                pyright
+version             1.1.285
+revision            0
+
+categories          devel
+license             MIT
+maintainers         {reneeotten @reneeotten} openmaintainer
+
+description         Static type checker for Python
+long_description    Pyright is a fast type checker meant for large Python \
+                    source bases. It can run in a “watch” mode and performs \
+                    fast incremental updates when files are modified.
+
+homepage            https://github.com/microsoft/pyright
+
+checksums           rmd160  1af454c169cf930dd31640c34d9128ac2dd88acb \
+                    sha256  1a2c764e5c2cbe572ce4446c84fdb7586ec3307f96006f659fc06d62968643ef \
+                    size    2780903

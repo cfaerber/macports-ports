@@ -3,11 +3,11 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/digitalocean/doctl 1.68.0 v
+go.setup            github.com/digitalocean/doctl 1.91.0 v
+github.tarball_from archive
 revision            0
 
 categories          www devel
-platforms           darwin
 license             Apache-2
 maintainers         {@kritr gmail.com:krdevmail} \
                     {@judaew judaew} \
@@ -15,9 +15,9 @@ maintainers         {@kritr gmail.com:krdevmail} \
 description         A command line interface for the DigitalOcean API
 long_description    ${description}
 
-checksums           rmd160  e77750d7b9fce5af9d36462b176c486983c8a8d3 \
-                    sha256  3f3c222338bac6419f2b5351eed4f40813314884d2203ee6864e9007711c2315 \
-                    size    5513708
+checksums           rmd160  0ca151ae5677cd5512003d348d2c976141e72ac9 \
+                    sha256  8a3d72f4b21505a19ebab8c12a8f2b81e6139848cfb09018084e658c6e5d707b \
+                    size    7582284
 
 set doctl_ver [split ${version} "."]
 set doctl_major [lindex ${doctl_ver} 0]

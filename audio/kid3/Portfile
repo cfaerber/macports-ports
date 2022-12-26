@@ -3,11 +3,10 @@
 PortSystem          1.0
 
 name                kid3
-version             3.9.0
+version             3.9.2
 revision            0
 
 categories          audio
-platforms           darwin
 supported_archs     x86_64
 license             GPL
 maintainers         {judaew @judaew} openmaintainer
@@ -25,9 +24,9 @@ master_sites        sourceforge:kid3
 distname            ${name}-${version}-Darwin
 use_dmg             yes
 
-checksums           rmd160  3a6603a4a7fb82e2ec11dca29f1a2ba47d577b44 \
-                    sha256  a6b892125e1309272e50dbaff22c7624c978785b7ebf020c4cb50bb556b9c9f9 \
-                    size    21567612
+checksums           rmd160  550f5fde278306421819ea1f0aeaaba95a86c1e0 \
+                    sha256  f29bdd539c2cdfae0f5a4ee10e567a23f882c6eba6cae788a10ee4d9d6391b9b \
+                    size    21851752
 
 use_configure       no
 build {}

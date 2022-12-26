@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-tensorflow-metal
-version             0.3.0
+version             0.6.0
 revision            0
 
 platforms           darwin
@@ -27,23 +27,20 @@ extract.suffix      .whl
 extract.only
 
 # set build_arch by hand on arm64/x86_64 systems to get x86_64/arm64 checksums
-# sudo port -d checksum py38-tensorflow-metal os.arch=arm build_arch=arm64
+# sudo port -d checksum py310-tensorflow-metal os.arch=arm build_arch=arm64
 # run `port clean --all py*-tensorflow-metal` afterwards
 
-platform arm {
-    python.versions 38 39
-    set minimum_supported_major_version 21
-}
-platform i386 {
-    python.versions 38
-    set minimum_supported_major_version 20
-}
+python.versions 38 39 310
+set minimum_supported_major_version 21
 
-if {${os.platform} eq {darwin} && ${os.major} < ${minimum_supported_major_version}} {
+if {${os.arch} ni [list arm i386]
+    || ${os.platform} eq {darwin}
+        && ${os.major} < ${minimum_supported_major_version}} {
     known_fail      yes
     pre-fetch {
         ui_error "TensorFlow with ML Compute acceleration is only available \
-            on macOS [expr ${minimum_supported_major_version} - 9] and later."
+            on macOS [expr ${minimum_supported_major_version} - 9] and later \
+            with [join ${supported_archs} " or "] architectures."
         error {unsupported platform}
     }
 }
@@ -51,32 +48,53 @@ if {${os.platform} eq {darwin} && ${os.major} < ${minimum_supported_major_versio
 if {${name} ne ${subport}} {
     # https://pypi.org/project/tensorflow-metal/#files
     if {${build_arch} eq {arm64}} {
-        if {${python.version} eq 38} {
+        if {${python.version} eq 310} {
             master_sites \
-                    https://files.pythonhosted.org/packages/bf/4c/0bb94c02a9212471ca7459c5903cbdd903e2fe6ef73ae840f625049d6681/
+                    https://files.pythonhosted.org/packages/23/6d/bb05013d643e696f1f3c8eb1b2814ab5557c2d85b042861fe8f55620197a/
             checksums \
-                    rmd160  da3da65ba6fd8742f22f1a355dd0e354214dc570 \
-                    sha256  47b4a57871a555245ce358d494f7d2da19d9112cfa86057fd663f704ef4481c1 \
-                    size    1229066
+                    rmd160  61943dbf335ff37fde1b19f5acb9bf52318a284c \
+                    sha256  181e2c1c95c0baf4b76f256d418593a4f44c2a9aa47fbcee64b6a4fdd33eeff7 \
+                    size    1372081
         } elseif {${python.version} eq 39} {
             master_sites \
-                    https://files.pythonhosted.org/packages/ec/7c/bde2e329e99dc1ac4b2e86e78aeb4b43904ca92c72526d30804933de5814/
+                    https://files.pythonhosted.org/packages/85/7f/db09765c45a692d32127879359dd84524956848b5436184f2f658640d643/
             checksums \
-                    rmd160  8eb871e013d702a2b4fd290d8d1f0ce38914a20e \
-                    sha256  03eec57cab17666c04db2e84f4a0d8542ee169956d26fe01f9e8f01fbf1982cb \
-                    size    1229065
+                    rmd160  16a4093c24c0a927c1979f9b620bf032bb431a05 \
+                    sha256  1ee3adca0562513443069804f3a637e381cedd2b665336e6964e6da0310f7a73 \
+                    size    1372077
+        } elseif {${python.version} eq 38} {
+            master_sites \
+                    https://files.pythonhosted.org/packages/da/9e/4fa2082abd9a9f48adc5ce194981f2b51fae02e7a88d8c82ebb1f4ab3441/
+            checksums \
+                    rmd160  cf46f5667f0862f48183c5b579b6100c4ba15ca4 \
+                    sha256  ad4cd72c9cd69bf377d2e15a3a3ddee62b3a79dab6ae65838c0e5cdec627bcf5 \
+                    size    1372768
         }
     } elseif {${build_arch} eq {x86_64}} {
-        if {${python.version} eq 38} {
+        if {${python.version} eq 310} {
             master_sites \
-                    https://files.pythonhosted.org/packages/ed/3c/cd085fb3c3664e4372690311a1e21b6d7b30f78bfd71e9be89124d5cfe98/
+                    https://files.pythonhosted.org/packages/fc/f0/4919b2f1204ac70c522bd7868a4505ab42d5d4f7e8d320fb9ae288f3336c/
             checksums \
-                    rmd160  5c25115a172cfeba8bdb6149cd7f0376e958fbb4 \
-                    sha256  c20fe22590c4e714f1370cc1e54d969ed56f751266a500142fe1a4f248bfc6d4 \
-                    size    1465759
+                    rmd160  fce67068a34a61245c205cdebfe2b7ef1591f76e \
+                    sha256  ad500971b2270479367b53caf3704470cbd22cb8b5ef7cfb01b54533f63d4895 \
+                    size    1501820
+        } elseif {${python.version} eq 39} {
+            master_sites \
+                    https://files.pythonhosted.org/packages/17/1f/c524d351a636b46422bacaca6635b6abb0e34cced1f9e6b02ace93ca3534/
+            checksums \
+                    rmd160  7d8a988ac3e8e46d04877bd5247e24c87beb0883 \
+                    sha256  b08330194278bb9da96ab386614d252ff867cf7223e9c401a5e52213f00f6381 \
+                    size    1501817
+        } elseif {${python.version} eq 38} {
+            master_sites \
+                    https://files.pythonhosted.org/packages/1f/3d/4a9c0301e46f66490280ba45ab6b312b18f2f94dea5ee976db2862ce7cca/
+            checksums \
+                    rmd160  075c8e1592559a655c2d5badbefb89d85424ee50 \
+                    sha256  f7da1c286920ea7c9110a8175c427d249267bbe5a7ca0125928c3bc0cd3a3fc2 \
+                    size    1502508
         }
     }
-    distname tensorflow_metal-${version}-cp${python.version}-cp${python.version}-macosx_11_0_${build_arch}
+    distname tensorflow_metal-${version}-cp${python.version}-cp${python.version}-macosx_12_0_${build_arch}
 
     depends_build-append \
                     port:py${python.version}-pip \
@@ -87,18 +105,15 @@ if {${name} ne ${subport}} {
     
     use_configure   no
 
-    build {}
+    build           {}
 
     destroot.cmd    pip-${python.branch}
     destroot.args   --ignore-installed \
                     --no-cache-dir \
                     --no-dependencies \
-                    --root ${destroot}
+                    --root ${destroot} \
+                    ${distpath}/${distfiles}
     destroot.post_args
-
-    destroot {
-        system "${destroot.cmd} ${destroot.target} ${destroot.args} ${distpath}/${distname}${extract.suffix}"
-    }
 
     livecheck.type  none
 }

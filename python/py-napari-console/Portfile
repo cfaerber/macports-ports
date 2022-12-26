@@ -4,24 +4,25 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-napari-console
-version             0.0.4
+version             0.0.7
 revision            0
-categories          python
 license             BSD
 maintainers         {mps @Schamschula} openmaintainer
 description         A plugin that adds a console to napari.
 long_description    {*}${description}
-platforms           darwin
+supported_archs     noarch
+platforms           {darwin any}
 homepage            https://github.com/napari/napari-console
 
 python.versions     37 38 39 310
 
-checksums           rmd160  11099872346022e4966d771922c9b76bea08bca5 \
-                    sha256  ea0e30fbfdd76542adda44be457f1306a65146fe7578f95838e28d62874f4c45 \
-                    size    17134
+checksums           rmd160  8ee24c865cafb67a736608c6838732e82c00dfc9 \
+                    sha256  b6a5d71691827992ab7765ead52bd6d5b648b4a69eb3535f4e6524c37054c6a4 \
+                    size    17617
 
 if {${name} ne ${subport}} {
-    depends_build-append \
+    python.pep517   yes
+    depends_build-append  \
                     port:py${python.version}-setuptools_scm
 
     depends_lib-append  \
@@ -30,6 +31,4 @@ if {${name} ne ${subport}} {
                     port:py${python.version}-napari-plugin-engine \
                     port:py${python.version}-qtconsole \
                     port:py${python.version}-qtpy
-
-    livecheck.type  none
 }

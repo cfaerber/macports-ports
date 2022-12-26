@@ -4,10 +4,10 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-filelock
-version             3.4.0
+version             3.8.0
 revision            0
 
-platforms           darwin
+platforms           {darwin any}
 supported_archs     noarch
 license             public-domain
 maintainers         {@funasoul gmail.com:funasoul} openmaintainer
@@ -19,16 +19,25 @@ long_description    This package contains a single module, which implements \
 
 homepage            https://py-filelock.readthedocs.io/
 
-checksums           rmd160  9d2213165c6dfc44a0652124fb8a74ee2bd3ac5b \
-                    sha256  93d512b32a23baf4cac44ffd72ccf70732aeff7b8050fcaf6d3ec406d954baf4 \
-                    size    206359
+checksums           rmd160  73be21c1e144f3d177883745ba683df4df556f00 \
+                    sha256  55447caa666f2198c5b6b13a26d2084d26fa5b115c00d065664b2124680c4edc \
+                    size    207618
 
 # keep version for PY27 and PY34, these are (indirect) dependencies of py-virtualenv
-python.versions     27 34 35 36 37 38 39 310
+python.versions     27 34 35 36 37 38 39 310 311
 
 if {${name} ne ${subport}} {
     depends_build-append \
                     port:py${python.version}-setuptools_scm
+
+    if {${python.version} == 36} {
+        version     3.4.1
+        revision    0
+
+        checksums   rmd160  4df725914d2d3943b8ebabc699695ab1a6da700d \
+                    sha256  0f12f552b42b5bf60dba233710bf71337d35494fc8bdd4fd6d9f6d082ad45e06 \
+                    size    206768
+    }
 
     if {${python.version} <= 35} {
         version     3.2.1

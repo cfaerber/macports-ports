@@ -6,11 +6,11 @@ PortSystem          1.0
 PortGroup           muniversal 1.0
 
 name                expat
-version             2.4.2
+version             2.5.0
 revision            0
-checksums           rmd160  8c1feade9bf9e35dd353e4fe0b055c79363393a3 \
-                    sha256  e40737134bdc08b8ea7d23a2c0a5cd11c04d5be152fe562d3253c1e4a0be6686 \
-                    size    558087
+checksums           rmd160  493d4d0b5ed08e2037fd44977218d36c80768392 \
+                    sha256  6f0e6e01f7b30025fa05c85fdad1e5d0ec7fd35d9f61b22f34998de11969ff67 \
+                    size    569205
 
 categories          textproc devel
 platforms           darwin freebsd

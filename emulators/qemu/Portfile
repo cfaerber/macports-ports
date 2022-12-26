@@ -5,14 +5,13 @@ PortGroup compiler_blacklist_versions 1.0
 PortGroup legacysupport 1.1
 
 # clock_gettime
-legacysupport.newest_darwin_requires_legacy 15
+legacysupport.newest_darwin_requires_legacy 16
 
 name                    qemu
-version                 6.2.0
-revision                0
+version                 7.1.0
+revision                1
 categories              emulators
 license                 GPL-2+
-platforms               darwin
 maintainers             {raimue @raimue} \
                         openmaintainer
 
@@ -26,9 +25,9 @@ homepage                https://www.qemu.org
 master_sites            https://download.qemu.org/
 use_xz                  yes
 
-checksums               rmd160  1860d0ab3729a6e247ef69543249d60278d8496e \
-                        sha256  68e15d8e45ac56326e0b9a4afa8b49a3dfe8aba3488221d098c84698bca65b45 \
-                        size    115667324
+checksums               rmd160  01c82bed8b0219935c00981e16b573004b3802d0 \
+                        sha256  a0634e536bded57cf38ec8a751adb124b89c776fe0846f21ab6c6728f1cbbbe6 \
+                        size    121833004
 
 depends_build           port:texinfo \
                         port:libtool \
@@ -52,14 +51,11 @@ patchfiles-append       patch-qemu-configure.diff
 # "error: unknown type name 'fpunchhole_t'" pre-10.12.4
 patchfiles-append       patch-qemu-punchhole.diff
 
-# "cp: illegal option -- a"
-patchfiles-append       patch-qemu-scripts-entitlements.diff
-
 # IPPROTO workarounds
 patchfiles-append       patch-qemu-net-colo.diff
 
 # MADV_DONTNEED workaround
-patchfiles-append       patch-qemu-include-qemu-osdep.diff
+patchfiles-append       patch-qemu-include-qemu-madvise_h.diff
 
 # MAP_JIT workaround
 patchfiles-append       patch-qemu-tcg-region.diff
@@ -103,6 +99,7 @@ configure.args-append   --disable-cocoa \
                         --disable-vde \
                         --disable-brlapi \
                         --disable-cap-ng \
+                        --disable-spice-protocol \
                         --disable-spice \
                         --disable-libiscsi \
                         --disable-rbd \
@@ -123,11 +120,22 @@ configure.args-append   --disable-cocoa \
                         --disable-snappy \
                         --disable-lzo \
                         --disable-lzfse \
-                        --disable-zstd
+                        --disable-png \
+                        --disable-zstd \
+                        --disable-dbus-display \
+                        --enable-virtfs
+
+# Use 'smbd' installed by samba port, rather than macOS; latter does not work with qemu.
+configure.args-append   --smbd=${prefix}/sbin/smbd
 
 # Hypervisor.framework introduced in 10.10
 if {${os.platform} eq "darwin" && ${os.major} < 14} {
     configure.args-replace --enable-hvf --disable-hvf
+}
+
+# pthread_fchdir_np introduced in 10.12
+if {${os.platform} eq "darwin" && ${os.major} < 16} {
+    configure.args-replace --enable-virtfs --disable-virtfs
 }
 
 # libtool: unknown option character `-' in: --mode=compile
@@ -214,15 +222,27 @@ variant curl description {Support network block devices using CURL} {
 }
 
 variant vnc description {Support VNC server} {
-    configure.args-replace  --disable-vnc --enable-vnc
+    configure.args-replace  --disable-png --enable-png \
+                            --disable-vnc --enable-vnc
     configure.args-append   --enable-gnutls \
-                            --enable-vnc-sasl \
                             --enable-vnc-jpeg \
-                            --enable-vnc-png
-    depends_lib-append      port:gnutls \
+                            --enable-vnc-sasl
+    depends_lib-append      path:lib/pkgconfig/gnutls.pc:gnutls \
                             port:cyrus-sasl2 \
                             path:include/turbojpeg.h:libjpeg-turbo \
                             port:libpng
+}
+
+variant spice_protocol description {Support Spice protocol} {
+    configure.args-replace  --disable-spice-protocol --enable-spice-protocol
+    depends_lib-append      port:spice-protocol
+}
+
+variant spice requires spice_protocol description {Support Spice server} {
+    configure.args-replace  --disable-spice --enable-spice
+    configure.args-append   --enable-gnutls
+    depends_lib-append      path:lib/pkgconfig/gnutls.pc:gnutls \
+                            port:spice-server
 }
 
 variant vde description {Support VDE networking} {
@@ -253,6 +273,11 @@ variant zstd description {Support zstd compression} {
 variant ssh description {Support remote block devices over SSH} {
     configure.args-replace  --disable-libssh --enable-libssh
     depends_lib-append      port:libssh
+}
+
+variant dbus description {Export the VM display through D-Bus} {
+    configure.args-replace  --disable-dbus-display --enable-dbus-display
+    configure.args-append   --enable-modules
 }
 
 # Default universal variant does not work

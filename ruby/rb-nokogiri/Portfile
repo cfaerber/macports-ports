@@ -8,8 +8,9 @@ PortGroup           ruby 1.0
 #
 #   ../rb-mini_portile2/Portfile
 #
-ruby.branches       3.1 3.0 2.7 2.6 2.5 2.4
-ruby.setup          nokogiri 1.13.0 gem
+# See https://rubygems.org/gems/nokogiri
+ruby.branches       3.1 3.0 2.7 2.6
+ruby.setup          nokogiri 1.13.10 gem
 revision            0
 maintainers         {kimuraw @kimuraw} \
                     {judaew @judaew} openmaintainer
@@ -18,12 +19,11 @@ long_description    Nokogiri is an HTML, XML, SAX, and Reader parser. \
                     Among Nokogiri's many features is the ability to search \
                     documents via XPath or CSS3 selectors.
 license             MIT
-platforms           darwin
 homepage            https://nokogiri.org
 
-checksums           rmd160  02306c7ef5c2b7384b5437eb6282a074576f6536 \
-                    sha256  8dbd691d438dc12dadc3d8b5b7ed0a6e64d84a2d65b392b52dce868fda107db3 \
-                    size    9597952
+checksums           rmd160  b84eb72463651d63f39cf4ee8257174f2a81b401 \
+                    sha256  d3ee00f26c151763da1691c7fc6871ddd03e532f74f85101f5acedc2d099e958 \
+                    size    4634624
 
 if {${name} ne ${subport}} {
     depends_extract     port:rb${ruby.suffix}-gem-patch

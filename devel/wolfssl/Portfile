@@ -3,7 +3,8 @@
 PortSystem          1.0
 
 name                wolfssl
-version             5.1.1
+version             5.5.3
+revision            0
 categories          devel security
 platforms           darwin
 maintainers         {wolfssl.com:facts @JacobBarthelmeh} openmaintainer
@@ -24,11 +25,11 @@ long_description    \
 master_sites        https://www.wolfssl.com/
 use_zip             yes
 
-checksums           rmd160  dc0e54123479ad197ba700eb5cb7a00bfbc35007 \
-                    sha256  11035f97e765802b3c7ffce152069123c76fd501035d65d26c5b06e7e125382e \
-                    size    12558116
+checksums           rmd160  f770795ccd13074558264e59a04d7108409a1fa5 \
+                    sha256  bc441ae086ddb9d42e2ad391920b400b8cabb19d2aea5efb1cb90b527e0990ee \
+                    size    20551889
 
-configure.args      --enable-distro \
+configure.args      --enable-all \
                     --disable-jobserver \
                     --disable-silent-rules
 
@@ -59,6 +60,6 @@ livecheck.url   https://www.wolfssl.com/wolfSSL/download/downloadForm.php
 livecheck.regex "${name}-((?!.*${name}.*|\\${extract.suffix}).*)\\${extract.suffix}"
 
 test.run    yes
-test.env    RANDFILE=/tmp/wolfssl-unittest-rnd DYLD_LIBRARY_PATH=${worksrcpath}/src/.libs
+test.env    TMPDIR=/tmp RANDFILE=/tmp/wolfssl-unittest-rnd DYLD_LIBRARY_PATH=${worksrcpath}/src/.libs
 test.target check
 test.args   -j${build.jobs}

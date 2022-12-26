@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-textual
-version             0.1.12
+version             0.1.17
 revision            0
 
 homepage            https://github.com/willmcgugan/textual
@@ -27,21 +27,19 @@ categories-append   devel
 license             MIT
 maintainers         {gmail.com:herby.gillot @herbygillot} openmaintainer
 supported_archs     noarch
+platforms           {darwin any}
 
-checksums           rmd160  e22bb60a4088eee2f9101c107392d1ff3914b3c9 \
-                    sha256  fa70b9f2fe43819afeea64dff355aee1610e1d55e9915df1cef5b0d6f86cb20d \
-                    size    61429
+checksums           rmd160  db39315de91e7bc4b4b0fcaf3923041dbcb2dd48 \
+                    sha256  af6aa1fa34fe6d40689ce55a7bf519a07e48523a75b95cbed572990e0d6b6f84 \
+                    size    76759
 
 python.versions     39 310
 python.pep517       yes
 python.pep517_backend   poetry
 
 if {${name} ne ${subport}} {
-
     depends_build-append    port:poetry
 
     depends_lib-append      port:py${python.version}-rich \
                             port:py${python.version}-typing_extensions
-
-    livecheck.type  none
 }

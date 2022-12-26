@@ -3,10 +3,10 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/golang/tools 0.1.8 v
+go.setup            github.com/golang/tools 0.4.0 v
+github.tarball_from archive
 epoch               7
 revision            0
-
 
 name                go-tools
 categories          devel
@@ -15,11 +15,9 @@ maintainers         {ciserlohn @ci42} {@enckse voidedtech.com:enckse} openmainta
 description         Various packages and tools that support the Go programming language.
 long_description    $description
 
-checksums           rmd160  b0f01c5169b12cb2aa3e73fa4842cbeb916e3e71 \
-                    sha256  f4449b1bc8aea5864bffadf507f4b690edae12b707c07c2f7497d6d5ff8497ec \
-                    size    2929454
-
-github.tarball_from archive
+checksums           rmd160  e8e928aa56ed0d8ff1c704174f1a97b83e75a868 \
+                    sha256  d85785d97aa7dc217fa7fa6e8d375806771c54cfff008060a44045a21b438bfe \
+                    size    3271550
 
 # FIXME: This port currently can't be built without allowing go mod to fetch
 # dependencies during the build phase. See
@@ -30,7 +28,7 @@ build.args          -o bin/ ./cmd/... ./cmd/auth/...
 
 destroot {
     set dp_bin ${destroot}${prefix}/bin
-    xinstall -m 755 {*}[glob ${worksrcpath}/bin/*] ${dp_bin}
+    xinstall -m 0755 {*}[glob ${worksrcpath}/bin/*] ${dp_bin}
 
     # Rename bundle binary to avoid conflict with Ruby
     # See: https://trac.macports.org/ticket/57787

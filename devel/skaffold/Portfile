@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        GoogleContainerTools skaffold 1.35.1 v
+github.setup        GoogleContainerTools skaffold 2.0.4 v
 revision            0
 
 categories          devel
@@ -22,15 +22,15 @@ homepage            https://skaffold.dev
 
 github.tarball_from archive
 
-checksums           rmd160  7fcbd62eabb8bdebc29e13a82ff00fc169d83da0 \
-                    sha256  121936ed92f85f87a0d8697787a5fab721241490618e3fd63ffda575d64be03c \
-                    size    16882290
+checksums           rmd160  910bf4dd3f6de5367ca03bc44cd1d0747de1648e \
+                    sha256  c86efc08e3687eb1b0f952e99823c8247c74caab0cba8ef673cef1c311cc3da3 \
+                    size    41605601
 
 depends_build       port:go
 
 use_configure       no
 
-build.env-append    VERSION=${version}
+build.env-append    VERSION=${version} LOCAL=true
 build.target
 
 destroot {

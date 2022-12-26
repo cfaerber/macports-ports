@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-panel
-version             0.12.6
+version             0.14.2
 revision            0
 categories          python
 license             BSD
@@ -13,25 +13,25 @@ description         A high-level app and dashboarding solution for Python.
 long_description    Panel is an open-source Python library that lets you create custom \
                     interactive web apps and dashboards by connecting user-defined \
                     widgets to plots, images, tables, or text.
-platforms           darwin
+supported_archs     noarch
+platforms           {darwin any}
 homepage            https://panel.holoviz.org
 
-python.versions     37 38 39 310
+python.versions     37 38 39 310 311
 
-checksums           rmd160  a2335453fb2904c103df3156bb968549ea775e1b \
-                    sha256  97e158e8eb941f88d71929407f9455c903b5e18d89969db8ce8af66036f46b53 \
-                    size    14027392
+checksums           rmd160  48cde2f2e0b6b928bac138e37ee0034afe986774 \
+                    sha256  c22690833dfa508d72ae632e2d42ea7d63ee2a31347e23b7ecf8dcded312ec74 \
+                    size    20352366
 
 if {${name} ne ${subport}} {
     python.pep517   yes
 
     depends_build-append \
-                    port:py${python.version}-pyct \
-                    port:py${python.version}-setuptools \
-                    port:py${python.version}-wheel
+                    port:npm8 \
+                    port:py${python.version}-pyct
 
     depends_run-append \
-                    port:nodejs17 \
+                    path:bin/node:nodejs16 \
                     port:py${python.version}-bleach \
                     port:py${python.version}-bokeh \
                     port:py${python.version}-markdown \
@@ -42,5 +42,11 @@ if {${name} ne ${subport}} {
                     port:py${python.version}-requests \
                     port:py${python.version}-tqdm
 
-    livecheck.type  none
+    platform darwin {
+        if {${os.major} < 13} {
+            depends_run-replace \
+                    path:bin/node:nodejs16 \
+                    path:bin/node:nodejs14
+        }
+    }
 }

@@ -4,28 +4,27 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           python 1.0
 
-github.setup        dtrx-py dtrx 8.2.1
+github.setup        dtrx-py dtrx 8.5.0
 revision            0
-checksums           rmd160  7a3f1803dca955356cf39c54b36f3d0af462fe26 \
-                    sha256  02a65b8ab2761055a95990b81b53723816128fd3205e2fc2a5ddfb8f448a1144 \
-                    size    1086106
+checksums           rmd160  764c5d1b6527d69387bf1a6dcd40e92b123187ed \
+                    sha256  88f32a3a0ea91adbd242f068be0b15ec3549dedb2a836cedf01aabfe7ce7edca \
+                    size    34075
 
 categories          archivers
 maintainers         {ryandesign @ryandesign} openmaintainer
 license             GPL-3+
 supported_archs     noarch
+platforms           {darwin any}
 
 description         extracts archives in a number of different formats
 
-long_description    ${name} ${description}\; it currently supports tar, \
+long_description    ${name} {*}${description}\; it currently supports tar, \
                     zip (including self-extracting .exe files), cpio, rpm, \
                     deb, gem, 7z, cab, rar, and InstallShield files. \
                     It can also decompress files compressed with gzip, \
                     bzip2, lzma, xz, or compress.
 
-github.tarball_from archive
-
-patchfiles          no-twine.patch
+github.tarball_from releases
 
 python.default_version \
                     310
@@ -39,7 +38,6 @@ post-destroot {
     xinstall -d ${docdir}
     xinstall -m 0644 -W ${worksrcpath} \
         COPYING \
-        NEWS \
-        README \
+        README.md \
         ${docdir}
 }

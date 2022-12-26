@@ -2,15 +2,17 @@
 
 PortSystem      1.0
 PortGroup       legacysupport 1.0
+PortGroup       compiler_blacklist_versions 1.0
 
 name            bind9
-version         9.16.24
+version         9.18.10
 categories      net
-maintainers     {geeklair.net:dluke @danielluke}
+maintainers     {geeklair.net:dluke @danielluke} {jmr @jmroot}
 platforms       darwin freebsd sunos
 
 description     Domain Name System server
-license         MPL
+# see https://gitlab.isc.org/isc-projects/bind9/-/blob/main/LICENSE
+license         {MPL-2 GPL-2+ LGPL-2.1+ AGPL-3+}
 
 long_description \
                 The BIND DNS Server is used on the vast majority of name \
@@ -27,9 +29,9 @@ homepage        https://www.isc.org/
 distname        bind-${version}
 master_sites    isc:${name}/${version}
 
-checksums       rmd160    edeae39b025579605758f8eadf02fdf5a2fdea6f \
-                sha256    5582f3734bd6232284f93f14206b8a46d1f819dea4797ae157066f6963b08507 \
-                size      5070180
+checksums       rmd160    aa1ffd70bd2e5ad4e1d0ecbb3ae901f6b5f19199 \
+                sha256    f415a92feb62568b50854a063cb231e257351f8672186d0ab031a49b3de2cac6 \
+                size      5261572
 
 use_xz          yes
 
@@ -38,19 +40,24 @@ depends_build   port:pkgconfig
 depends_lib     path:lib/libssl.dylib:openssl  \
                 port:libuv \
                 port:libxml2 \
-                port:python39 \
-                port:py39-ply
+                port:nghttp2 \
+                port:jemalloc \
+                port:json-c \
+                port:libidn2 \
+                port:lmdb
 
-use_parallel_build \
-                no
 universal_variant \
                 no
 
+# Needs working __atomic_* builtins
 compiler.blacklist \
-                gcc-4.2
+                gcc-4.2 \
+                {clang < 500}
 
-patchfiles      atomics.patch
+patchfiles      atomics.patch \
+                configure.patch
 
+# tests require `sudo bin/tests/system/ifconfig.sh up`
 test.run        yes
 test.target     test
 
@@ -62,10 +69,11 @@ add_users       named group=named
 
 configure.env   STD_CDEFINES=-DDIG_SIGCHASE=1
 
-configure.args  --mandir=${prefix}/share/man \
+configure.args  --disable-silent-rules \
+                --mandir=${prefix}/share/man \
                 --with-openssl=${prefix} \
-                --without-libjson \
-                --with-python=${prefix}/bin/python3.9
+                --with-libidn2=${prefix} \
+                --enable-doh
 
 platform darwin 8 {
     configure.args-append --with-dlopen=no \
@@ -121,4 +129,4 @@ notes "******************************************************
 
 livecheck.type   regex
 livecheck.url    ${homepage}downloads/
-livecheck.regex  "BIND(\\d+\.\\d+\.\\d+(?:-P\\d+)?).tar.gz - tar.gz\\s*</a>"
+livecheck.regex  {BIND(\d+\.\d*[02468]\.\d+(?:-P\d+)?)\.tar\.[gx]z - tar\.[gx]z\s*</a>}

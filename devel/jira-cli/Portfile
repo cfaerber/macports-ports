@@ -1,0 +1,51 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           golang 1.0
+
+go.setup            github.com/ankitpokhrel/jira-cli 1.2.0 v
+github.tarball_from archive
+revision            0
+
+description         Feature-rich interactive Jira command line
+
+long_description    \
+    Jira-Cli is an interactive command line tool for Atlassian Jira that will \
+    help you avoid Jira UI to some extent. This tool is not yet considered \
+    complete but has all the essential features required to improve your \
+    workflow with Jira.
+
+categories          devel
+installs_libs       no
+license             MIT
+maintainers         {gmail.com:herby.gillot @herbygillot} \
+                    openmaintainer
+
+checksums           rmd160  699358bbf5f0291e4f4a9cb3063f131036f9ccaa \
+                    sha256  7181903db8cbc44a514c4c374d952b964e49ba9dfc866fbe90cef24ea2e2009a \
+                    size    53272692
+
+# Allow Go to fetch dependencies at build-time
+build.env-delete    GO111MODULE=off GOPROXY=off
+
+build.cmd           make
+build.pre_args      GIT_COMMIT=archive \
+                    SOURCE_DATE_EPOCH="-1" \
+                    VERSION=${version}
+build.args          build
+
+patch {
+    reinplace {s|go build|go build -o ./bin/|g} ${worksrcpath}/Makefile
+}
+
+pre-build {
+    file mkdir ${worksrcpath}/bin
+}
+
+destroot {
+    xinstall -m 0755 ${worksrcpath}/bin/jira ${destroot}${prefix}/bin/
+}
+
+notes "
+    ${name} has been installed as `jira`
+"

@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           perl5 1.0
 
 perl5.branches      5.28 5.30 5.32 5.34
-perl5.setup         FFI-Platypus 1.56 ../../authors/id/P/PL/PLICEASE
+perl5.setup         FFI-Platypus 2.05 ../../authors/id/P/PL/PLICEASE
 revision            0
 license             {Artistic-1 GPL}
 maintainers         {devans @dbevans} openmaintainer
@@ -13,9 +13,9 @@ long_description    ${description}
 
 platforms           darwin
 
-checksums           rmd160  d6331a96ace1d0495ad338eec06dc67c177f5847 \
-                    sha256  66684faf37e7daf6240e5752c0e698055be498d1867bfb49148a035d383ca94f \
-                    size    387071
+checksums           rmd160  366139f39daa1ae83e6d70119c7ac3c1d6f233a3 \
+                    sha256  b59022c789f17cdebdacf8435e628ea4f968a6335df23bba35f74e52a2404e44 \
+                    size    421306
 
 if {${perl5.major} != ""} {
     depends_build-append \

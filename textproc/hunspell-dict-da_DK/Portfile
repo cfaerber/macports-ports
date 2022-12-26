@@ -3,13 +3,13 @@
 PortSystem          1.0
 PortGroup           hunspelldict 1.0
 
-hunspelldict.setup  da_DK 2.6.211 {Danish (Denmark)} ooo
+hunspelldict.setup  da_DK 2.7.005 {Danish (Denmark)} ooo
 revision            0
-checksums           rmd160  21fa4d22b1f0b482a54872d4a492c5185d00d57b \
-                    sha256  5e617cad85520c2a84d9faed330ee5c946de85870cae61f2de0c61f1d5b442f4 \
-                    size    2157891
+checksums           rmd160  e3dd5bcf18a07e9726aebbb34e1d3a6d25f62986 \
+                    sha256  014d4d49d3e564392af8191bf148da62e2e4eeb35e03b9e365c46f1217207472 \
+                    size    2183538
 
-maintainers         {lbschenkel @lbschenkel} openmaintainer
+maintainers         nomaintainer
 homepage            https://stavekontrolden.dk
 license             GPL-2 LGPL MPL
 

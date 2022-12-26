@@ -5,11 +5,11 @@ PortGroup           active_variants 1.1
 PortGroup           conflicts_build 1.0
 
 name                magic
-version             8.3.253
+version             8.3.354
 revision            0
-checksums           rmd160  bc64836a175b55a6fa5cd542cbdb6a6f3f55ee15 \
-                    sha256  8e0700c527771b3d6f9de6f397ce9d9a6dd6a5224b8502385d60f19f25b23d17 \
-                    size    4097604
+checksums           rmd160  f5dc4b0268fe44ad9dc8c806efad3d416bcd3658 \
+                    sha256  a70b83edec722f6ecc9242e5a7727dfd14518ae127c2590e4e63c485f6bd910b \
+                    size    4201151
 
 set branch          [join [lrange [split ${version} .] 0 1] .]
 categories          science
@@ -45,13 +45,15 @@ conflicts_build     gnome-keyring
 
 configure.dir       ${worksrcpath}/scripts
 
-# Massive implicit declaration of function problems beyond my interest
-# to fix at present; leaving it to the developers to fix. Therefore,
-# incompatible with arm64 at present.
-# https://github.com/RTimothyEdwards/magic/issues/69
-supported_archs     i386 ppc ppc64 x86_64
-configure.cflags-append \
-                    -Wno-error=implicit-function-declaration
+if {${os.platform} eq "darwin" && ${os.major} < 19} {
+    depends_build-append \
+                    port:python310
+    configure.args-append \
+                    ac_cv_path_PYTHON3=${prefix}/bin/python3.10
+} else {
+    configure.args-append \
+                    ac_cv_path_PYTHON3=/usr/bin/python3
+}
 
 use_parallel_build  no
 

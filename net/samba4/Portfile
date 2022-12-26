@@ -1,49 +1,52 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           perl5 1.0
+
+# O_CLOEXEC, AT_FDCWD
+PortGroup           legacysupport 1.1
+legacysupport.newest_darwin_requires_legacy 13
 
 name                samba4
 conflicts           samba3
-version             4.14.7
-revision            1
-checksums           rmd160  732a018b5b97e9efc91efd1b2d3540c23aec1dca \
-                    sha256  6f50353f9602aa20245eb18ceb00e7e5ec793df0974aebd5254c38f16d8f1906 \
-                    size 18668592
+version             4.15.5
+revision            4
+checksums           rmd160  0f16f05626b8b146f150292f89a7bbdfafc13548 \
+                    sha256  69115e33831937ba5151be0247943147765aece658ba743f44741672ad68d17f \
+                    size    19279071
 
 categories          net
-platforms           darwin
 maintainers         nomaintainer
 license             GPL-3
 description         SMB/CIFS server and client
 long_description    Samba is an software suite that provides seamless file \
                     and print services to SMB/CIFS clients.
 
-homepage            http://www.samba.org/
+homepage            https://www.samba.org
 master_sites        https://download.samba.org/pub/samba/stable
 distname            samba-${version}
 
-depends_build       port:pkgconfig
+perl5.major         5.34
+
+depends_build       port:pkgconfig \
+                    port:gettext
+
 depends_lib         port:cctools \
-                    port:gettext \
-                    port:gnutls \
+                    port:gettext-runtime \
+                    path:lib/pkgconfig/gnutls.pc:gnutls \
                     port:gpgme \
+                    path:lib/pkgconfig/icu-uc.pc:icu \
                     port:jansson \
                     port:libarchive \
                     port:libiconv \
                     path:lib/libldap.dylib:openldap \
-                    port:p5.28-parse-yapp \
+                    port:p${perl5.major}-parse-yapp \
                     port:popt \
-                    port:python38 \
+                    port:python310 \
                     port:readline \
                     port:zlib
 
-patch.pre_args      -p1
-
 platform darwin {
-    # fix missing header
-    patchfiles-append \
-                    patch-fix-debug.diff
-
     # patch "get_user_groups: failed to get the unix group list" on
     # macOS
     #
@@ -60,7 +63,7 @@ platform darwin {
     # https://github.com/Homebrew/legacy-homebrew/issues/5954
     patchfiles-append \
                     patch-macos-grouplimit.diff
- }
+}
 
 # patch to disable building documentation on MacOS
 # this enables us to have a working samba4 port without docs,
@@ -68,10 +71,10 @@ platform darwin {
 # doc build issues are resolved.
 patchfiles-append patch-no-xsltproc.diff
 
-configure.perl      ${prefix}/bin/perl5.28
-configure.python    ${prefix}/bin/python3.8
+configure.perl      ${perl5.bin}
+configure.python    ${prefix}/bin/python3.10
 configure.env-append \
-                    YAPP=${prefix}/bin/yapp-5.28
+                    YAPP=${prefix}/bin/yapp-${perl5.major}
 configure.cmd       ${configure.python} ./buildtools/bin/waf configure
 configure.args      -C \
                     --enable-fhs \
@@ -217,5 +220,5 @@ post-destroot {
 }
 
 livecheck.type  regex
-livecheck.url   http://us4.samba.org/samba/ftp/samba4/?M=D
+livecheck.url   https://download.samba.org/pub/samba/
 livecheck.regex samba-(\[0-9a-z.\]+)\\.tar\\.gz

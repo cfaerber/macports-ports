@@ -322,19 +322,14 @@ proc mpi.setup {args} {
             -gcc49 -gcc5 -gcc6 -gcc8 \
             -gccdevel
 
-        # Disable clang 12/13 unconditionally, as not yet supported for openmpi/mpich
-        lappend ::mpi.disabled_compilers \
-            -clang12 \
-            -clang13
+        # GCC 9 only supported for macOS 10.6 through 10.10
+        if {${os.major} < 10 || ${os.major} > 14} {
+            lappend ::mpi.disabled_compilers -gcc9
+        }
 
-        # gcc 9+ only available on OS X 10.7 (Darwin11) and newer
-        # However, gcc9+ subports fail to build on 10.7, for both openmpi and mpich.
-        # So only enable for 10.8+.
-        if {${os.major} < 12} {
-            lappend ::mpi.disabled_compilers -gcc9 -gcc10 -gcc11
-        } elseif {$is_mpich} {
-            # mpich: gcc11 subport currently disabled across-the-board
-            lappend ::mpi.disabled_compilers -gcc11
+        # Clang 15 only available on 10.7 and later
+        if {${os.major} < 11} {
+            lappend ::mpi.disabled_compilers -clang15
         }
 
         if {${os.arch} eq "arm"} {

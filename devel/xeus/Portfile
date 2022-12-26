@@ -4,9 +4,8 @@ PortSystem              1.0
 PortGroup               cmake 1.1
 PortGroup               compiler_blacklist_versions 1.0
 PortGroup               github 1.0
-PortGroup               openssl 1.0
 
-github.setup            jupyter-xeus xeus 2.3.1
+github.setup            jupyter-xeus xeus 3.0.3
 revision                0
 categories              devel science
 license                 BSD
@@ -16,11 +15,10 @@ description             xeus is a library meant to facilitate the implementation
 long_description        {*}${description} It takes the burden of implementing the \
                         Jupyter Kernel protocol so developers can focus on implementing \
                         the interpreter part of the kernel.
-platforms               darwin
 
-checksums               rmd160  2219f37f5b255f8a0639fd56cd94751c2c9f162d \
-                        sha256  f3a3c62ef239825cada26ae45f1ac28058901409c5626d41867daf27242bf1ac \
-                        size    9062021
+checksums               rmd160  a84c327d46eec43ea963777e6080c1a6991276ac \
+                        sha256  9ebd8c2b047bd419c9b0acce39b7d69b4262cd7c88066009afbef43310ea199f \
+                        size    9025061
 
 compiler.cxx_standard   2014
 compiler.blacklist-append {clang < 900}
@@ -28,8 +26,7 @@ compiler.blacklist-append {clang < 900}
 depends_build-append    port:pkgconfig \
                         port:cctools
 
-depends_lib-append      port:cppzmq \
-                        port:nlohmann-json \
+depends_lib-append      port:nlohmann-json \
                         port:xtl
 
 configure.args-append   -DCMAKE_PREFIX_PATH=${prefix}/lib/cmake/xtl/xtlConfig.cmake \

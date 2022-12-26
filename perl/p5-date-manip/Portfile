@@ -5,12 +5,13 @@ PortGroup           perl5 1.0
 
 name                p5-date-manip
 perl5.branches      5.28 5.30 5.32 5.34
-perl5.setup         Date-Manip 6.86
+perl5.setup         Date-Manip 6.90 ../../authors/id/S/SB/SBECK
 revision            0
-
-platforms           darwin
 maintainers         nomaintainer
 license             {Artistic-1 GPL}
+
+platforms           {darwin any}
+supported_archs     noarch
 
 description         Perl Module for manipulating date and time.
 long_description    This is a set of routines designed to make any common\
@@ -19,13 +20,11 @@ long_description    This is a set of routines designed to make any common\
                     amount of time from another, or parsing international \
                     times are all easily done.
 
-checksums           rmd160  ba24c8b5f1ca1688f7dbddbc627f2e6cc6af2753 \
-                    sha256  b5203782d03c79aa5822cf33d1828aaa3b4db93a275d4a428c89f56f4713361f \
-                    size    2007485
+checksums           rmd160  2f423938550c94646bcf00271f2b09a2a828910b \
+                    sha256  14a81529410b56afa54a3733dd19578219d2f63c44de682204a68226f95b8533 \
+                    size    1866343
 
 if {${perl5.major} != ""} {
     depends_build-append \
         port:p${perl5.major}-test-inter
-
-    supported_archs noarch
 }

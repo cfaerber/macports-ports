@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           github  1.0
 PortGroup           python  1.0
 
-github.setup        nschloe tiptop 0.0.16 v
+github.setup        nschloe tiptop 0.2.5 v
 github.tarball_from archive
 revision            0
 
@@ -17,20 +17,23 @@ long_description    \
     and macOS.
 
 supported_archs     noarch
+platforms           {darwin any}
 license             MIT
-categories          sysutils
+categories-prepend  sysutils
 maintainers         {gmail.com:herby.gillot @herbygillot} openmaintainer
 
-checksums           rmd160  a4ae261c51af8ebb5b736c6c2cee39a8658837ad \
-                    sha256  73f8a4367f05acc90a118554bfd5bfd9b645a30b1de4985740b1cf6a1a6486c2 \
-                    size    14932
+checksums           rmd160  180cd84c2b31e0f5afd4755961ce84573b705b1d \
+                    sha256  5392945518abecd41d904af89e2fa7ea8fedd2f008996d541958f1ed9049bb94 \
+                    size    17618
 
-python.default_version      39
-python.pep517               yes
+python.default_version  310
+python.pep517           yes
+python.pep517_backend   flit
 
 depends_run-append  port:py${python.version}-cpuinfo \
                     port:py${python.version}-distro \
                     port:py${python.version}-psutil \
+                    port:py${python.version}-rich \
                     port:py${python.version}-textual
 
 depends_test-append port:py${python.version}-pytest
@@ -38,4 +41,4 @@ depends_test-append port:py${python.version}-pytest
 test.run            yes
 test.cmd            pytest-${python.branch}
 test.target
-test.env-append     PYTHONPATH=./build/lib
+test.env-append     PYTHONPATH=${worksrcpath}/build/lib
